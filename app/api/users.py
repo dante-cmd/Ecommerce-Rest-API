@@ -4,7 +4,7 @@ from typing import List
 from datetime import timedelta
 from app.database.database import get_db
 from app.models.models import User as UserModel
-from app.schemas.schemas import User, UserCreate, Token
+from app.schemas.schemas import User, UserCreate, Token, UserRecovery
 from app.core.security import get_password_hash, verify_password, create_access_token
 from app.core.security import ACCESS_TOKEN_EXPIRE_MINUTES
 from datetime import datetime
@@ -15,6 +15,9 @@ router = APIRouter()
 class TokenRequest(BaseModel):
     email: str
     password: str
+
+class TokenRequestWithoutPassword(BaseModel):
+    email: str
 
 
 @router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
@@ -57,11 +60,36 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
+@router.get("/email/{email}", response_model=User)
+def read_user_by_email(email: str, db: Session = Depends(get_db)):
+    db_user = db.query(UserModel).filter(UserModel.email == email).first()
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
+
+
 @router.post("/token")
 def login_for_access_token(token_request: TokenRequest, db: Session = Depends(get_db)):
     # = Form(...)
     user = db.query(UserModel).filter(UserModel.email == token_request.email).first()
     if not user or not verify_password(token_request.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": str(user.id)}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@router.post("/token_without_password")
+def login_for_access_token_without_password(token_request: TokenRequestWithoutPassword, db: Session = Depends(get_db)):
+    # = Form(...)
+    user = db.query(UserModel).filter(UserModel.email == token_request.email).first()
+    if not user: 
+        # or not verify_password(token_request.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",

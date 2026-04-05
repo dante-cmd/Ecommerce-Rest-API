@@ -1,8 +1,8 @@
-version: '3.8'
 
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
+    platform: linux/amd64  # Required for Apple Silicon
     container_name: ecommerce-sqlserver
     environment:
       - ACCEPT_EULA=Y
@@ -30,3 +30,8 @@ services:
 
 volumes:
   sqlserver_data:
+
+networks:
+  default:
+    external: true
+    name: shared_network

@@ -298,7 +298,7 @@ DOMAINS = [
 
 
 def get_total_user() -> Dict[str, Any]:
-    """Get all products from the API"""
+    """Get all users from the API"""
     try:
         response = requests.get(f"{BASE_URL}/api/users/total")
         if response.status_code == 200:
@@ -308,8 +308,8 @@ def get_total_user() -> Dict[str, Any]:
         print("Failed to connect to the API. Make sure the service is running.")
         return dict()
     
-def get_user(idx) -> Dict[str, Any]:
-    """Get all products from the API"""
+def get_user_by_id(idx) -> Dict[str, Any]:
+    """Get a user by their ID from the API"""
     try:
         response = requests.get(f"{BASE_URL}/api/users/{idx}")
         if response.status_code == 200:
@@ -318,9 +318,53 @@ def get_user(idx) -> Dict[str, Any]:
     except requests.exceptions.ConnectionError:
         print("Failed to connect to the API. Make sure the service is running.")
         return dict()
+    
+def get_user_by_email(email: str) -> Dict[str, Any]:
+    """Get a user by their email from the API"""
+
+    try:
+        response = requests.get(f"{BASE_URL}/api/users/email/{email}")
+        if response.status_code == 200:
+            return response.json()
+        return dict()
+    except requests.exceptions.ConnectionError:
+        print("Failed to connect to the API. Make sure the service is running.")
+        return dict()
+
+def get_or_create_user(username: str, email: str, password: str) -> Dict[str, Any]:
+    """Create a new user account or return existing user if email is already registered"""
+    user_data = {
+        "username": username,
+        "email": email,
+        "password": password
+        # "created_at":date
+    }
+    response = requests.post(f"{BASE_URL}/api/users/", json=user_data)
+    if response.status_code == 201:
+        return response.json()
+    elif response.status_code == 404:
+        return get_user_by_email(user_data["email"])
+    return {}
+
+def auth_without_password(email: str) -> Dict[str, Any]:
+    """Authenticate a user and get an access token from the API"""
+    try:
+        response = requests.post(
+            f"{BASE_URL}/api/users/token_without_password", 
+            json={"email": email})
+
+        if response.status_code == 200:
+            return response.json()
+        return dict()
+    except requests.exceptions.ConnectionError:
+        print("Failed to connect to the API. Make sure the service is running.")
+        return dict(
+            access_token="",
+            token_type="bearer"
+        )
 
 def auth(email: str, password: str) -> Dict[str, Any]:
-    """Get all products from the API"""
+    """Authenticate a user and get an access token from the API"""
     try:
         response = requests.post(
             f"{BASE_URL}/api/users/token", 
@@ -351,19 +395,6 @@ def get_product(product_id: int) -> Dict[str, Any]:
     """Get a specific product from the API"""
     response = requests.get(f"{BASE_URL}/api/products/{product_id}")
     if response.status_code == 200:
-        return response.json()
-    return {}
-
-def create_user(username: str, email: str, password: str) -> Dict[str, Any]:
-    """Create a new user"""
-    user_data = {
-        "username": username,
-        "email": email,
-        "password": password
-        # "created_at":date
-    }
-    response = requests.post(f"{BASE_URL}/api/users/", json=user_data)
-    if response.status_code == 201:
         return response.json()
     return {}
 
@@ -404,7 +435,7 @@ def create_interaction(user_id: int|None,
                        product_id: int, 
                        interaction_type: str,
                        interaction_metadata: str|None = None,
-                       token: str|None = None) -> Dict[str, Any]: # type: ignore
+                       token: str|None = None) -> Dict[str, Any]: 
     """Create a user interaction"""
     interaction_data = {
         "user_id": user_id,
@@ -453,29 +484,29 @@ def simulate_user_journey():
         return
     print(f"Found {len(products)} products")
     
-    # Randomly decide if the user will create a new account or use an existing one
+    # Randomly decide if the visitor will create a new account 
+    # or continue as visitor without creating an account
     
     is_visitor = random.choice([True, False])
 
     if is_visitor:
+        username, email, password = None, None, None
         user_id = None
         token = None
-    else:
-        is_client = random.choice([True, False])
-        if is_client:
-            # Use existing account (user with id=2)
-            total_user = get_total_user()
-            user_id = np.random.randint(0, total_user['Total'])
-            token = None
-
-            print(f"Using existing account (User ID: {user_id})")
-        else:
+        
+        # This visitor wants to create a new account later in the journey, so we will create interactions 
+        # 
+        want_a_new_account = random.choice([True, False])
+        if want_a_new_account:
             # Create a new account
-            username = random.choice(USER_NAMES) # + str(random.randint(100, 999))
+            username = random.choice(USER_NAMES)
             email = convert_username(username) + "@" + random.choice(DOMAINS) # "@example.com"
             password = convert_username(username)
             
-            user = create_user(username, email, password) # type: ignore
+            # Create user or get existing user if email is already registered
+            user = get_or_create_user(username, email, password)
+            
+            # Authenticate a user and get an access token
             auth_response = auth(email, password)
             token = auth_response["access_token"]
 
@@ -485,6 +516,35 @@ def simulate_user_journey():
                 
             user_id = user["id"]
             print(f"Created new user: {user['username']} (ID: {user_id})")
+        else:
+            print("Continuing as visitor without creating an account")
+        
+    else:
+        total_user = get_total_user()
+        if total_user == 0:
+            username = random.choice(USER_NAMES) # + str(random.randint(100, 999))
+            email = convert_username(username) + "@" + random.choice(DOMAINS) # "@example.com"
+            password = convert_username(username)
+            
+            # Create user or get existing user if email is already registered
+            user = get_or_create_user(username, email, password)
+            
+            # Authenticate a user and get an access token
+            auth_response = auth(email, password)
+            token = auth_response["access_token"]
+
+            if not user:
+                print("Failed to create user. Exiting simulation.")
+                return
+            
+        user_id = np.random.randint(0, total_user['Total'])
+        user = get_user_by_id(user_id)
+        
+        auth_response = auth_without_password(user['email'])
+        token = auth_response["access_token"]
+
+        print(f"Using existing account (User ID: {user_id})")
+
     
     # Track user interactions
     interactions = []
@@ -496,39 +556,24 @@ def simulate_user_journey():
     # Select random products to view
     viewed_products = random.sample(products, num_products_to_view) 
     # min(num_products_to_view, len(products)))
+
+    products_in_basket = []
     
     # Simulate viewing products
+    # For each product, we will randomly decide if the user will click on it,
+    # add it to cart, or just view it and move on
     for product in viewed_products:
         # Record view interaction
         interaction = create_interaction(
-            user_id, product["id"], "view", token=token)
-        if interaction:
-            interactions.append(interaction)
-            print(f"User viewed product: {product['name']}")
-        
-        # Random delay to simulate real browsing
-        time.sleep(random.uniform(0.5, 2.0))
-    
-    # this must be a sample of the views
-    # Randomly decide how many products the user will click on
-
-    num_products_to_click = random.randint(1, len(viewed_products))
-    print(f"User will click on {num_products_to_click} products")
-    
-    # Select random products to click on
-    clicked_products = random.sample(viewed_products, num_products_to_click)
-    
-    # Simulate clicking on products
-    purchased_products = []
-    for product in clicked_products:
-        # Record click interaction
-        interaction = create_interaction(
-            user_id, product["id"], "click",
+            user_id=user_id, 
+            product_id=product["id"], 
+            interaction_type="view", 
+            interaction_metadata=None,
             token=token)
         if interaction:
             interactions.append(interaction)
-            print(f"User clicked on product: {product['name']}")
-        
+            print(f"User viewed product: {product['name']}")
+
         # Randomly decide if the user will try to add to cart
         if random.choice([True, False]):
             if not token:
@@ -554,7 +599,7 @@ def simulate_user_journey():
                         interactions.append(interaction)
                     
                     # Add to purchased products list for potential checkout
-                    purchased_products.append({
+                    products_in_basket.append({
                         "product_id": product["id"],
                         "quantity": quantity,
                         "product": product
@@ -568,6 +613,7 @@ def simulate_user_journey():
                 # Record out_of_stock interaction
                 interaction = create_interaction(
                     user_id, product["id"], "out_of_stock", token=token)
+                
                 if interaction:
                     interactions.append(interaction)
                 
@@ -579,11 +625,11 @@ def simulate_user_journey():
                     print(f"Restocked {product['name']} with {new_stock} units")
         
         # Random delay to simulate real browsing
-        time.sleep(random.uniform(0.5, 3.0))
+        time.sleep(random.uniform(0.5, 2.0))
     
     # Randomly decide if the user will make a purchase
-    if purchased_products and random.choice([True, False, True]):  # 66% chance to purchase
-        print(f"User is proceeding to checkout with {len(purchased_products)} items")
+    if products_in_basket and random.choice([True, False, True]):  # 66% chance to purchase
+        print(f"User is proceeding to checkout with {len(products_in_basket)} items")
         if not token:
             print("User is not authenticated, skipping purchase")
             return
@@ -591,7 +637,7 @@ def simulate_user_journey():
         # Prepare order items
         order_items = [
             {"product_id": item["product_id"], "quantity": item["quantity"]} 
-            for item in purchased_products
+            for item in products_in_basket
         ]
         
         # Select random payment method and bank
@@ -606,7 +652,7 @@ def simulate_user_journey():
             print(f"Payment method: {payment_method} ({bank})")
             
             # Record purchase interaction
-            for item in purchased_products:
+            for item in products_in_basket:
                 interaction_metadata = f"order_id: {order['id']}, quantity: {item['quantity']}, total: {order['total_amount']:.2f}"
                 interaction = create_interaction(
                     user_id, item["product_id"], "purchase", interaction_metadata,

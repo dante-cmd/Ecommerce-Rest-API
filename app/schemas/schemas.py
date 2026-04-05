@@ -12,6 +12,10 @@ class UserCreate(UserBase):
     password: str
     created_at: Optional[datetime] = None
 
+class UserRecovery(BaseModel):
+    email: str
+    password: str
+
 class User(UserBase):
     id: int
     is_active: bool

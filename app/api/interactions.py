@@ -12,6 +12,7 @@ def get_client_ip(request: Request):
     """Extract client IP address from request"""
     # Check for forwarded headers
     forwarded_for = request.headers.get('X-Forwarded-For')
+
     if forwarded_for:
         # Get the first IP in the list (client IP)
         return forwarded_for.split(',')[0].strip()
@@ -43,6 +44,7 @@ async def create_interaction(
         auth_header = request.headers.get("Authorization")
         if auth_header and auth_header.startswith("Bearer "):
             token = auth_header.split(" ")[1]
+            # If the token is null or empty, we will treat the user as anonymous 
             current_user = get_current_user(db, token)
     except:
         pass  # User is not authenticated, which is fine
@@ -54,10 +56,10 @@ async def create_interaction(
     db_interaction = UserInteractionModel(
         user_id=current_user.id if current_user else None,
         product_id=interaction.product_id,
-        # timestamp=interaction.timestamp,
         interaction_type=interaction.interaction_type,
         interaction_metadata=interaction.interaction_metadata,
-        ip_address=client_ip if not current_user else None  # Only store IP for anonymous users
+        ip_address=client_ip if not current_user else None  
+        # Only store IP for anonymous users
     )
     
     db.add(db_interaction)

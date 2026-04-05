@@ -11,13 +11,12 @@ class User(Base):
     hashed_password = Column(String(255))
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
-    # created_at = Column(DateTime)
     created_at = Column(DateTime, server_default=func.now())
     
     # Relationships
     orders = relationship("Order", back_populates="user")
     cart_items = relationship("CartItem", back_populates="user")
-    interactions = relationship("UserInteraction", back_populates="user")
+    # interactions = relationship("UserInteraction", back_populates="user")
 
 class Product(Base):
     __tablename__ = "products"
@@ -30,7 +29,6 @@ class Product(Base):
     image_url = Column(String(500))
     stock_quantity = Column(Integer)
     is_available = Column(Boolean, default=True)
-    # created_at = Column(DateTime, default=)
     created_at = Column(DateTime, server_default=func.now())
     
     # Relationships
@@ -47,8 +45,6 @@ class Order(Base):
     status = Column(String(50), default="pending")  # pending, confirmed, shipped, delivered
     payment_method = Column(String(50))  # credit_card, debit_card, paypal, etc.
     bank = Column(String(100))  # Bank associated with the payment method
-    # created_at = Column(DateTime)
-    # updated_at = Column(DateTime, nullable=True, default=None)
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
     
@@ -85,14 +81,14 @@ class UserInteraction(Base):
     __tablename__ = "user_interactions"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # Make user_id optional
+    user_id = Column(Integer,  nullable=True)  # Make user_id optional
+    # ForeignKey("users.id"),
     product_id = Column(Integer, ForeignKey("products.id"))
     interaction_type = Column(String(50))  # view, click, add_to_cart, purchase, out_of_stock
-    # timestamp = Column(DateTime, nullable=True)
     timestamp = Column(DateTime, server_default=func.now())
     interaction_metadata = Column(Text)  # Additional information about the interaction
     ip_address = Column(String(45), nullable=True)  # For tracking anonymous users by IP (IPv6 max length)
     
     # Relationships
-    user = relationship("User", back_populates="interactions")
+    # user = relationship("User", back_populates="interactions")
     product = relationship("Product", back_populates="interactions")

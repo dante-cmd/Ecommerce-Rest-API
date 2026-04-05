@@ -22,6 +22,7 @@ A complete e-commerce backend API built with FastAPI and SQLAlchemy, containeriz
    ```bash
    docker-compose up --build
    ```
+If the 
 
 The API will be available at `http://localhost:8000`
 
