@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import products, users, orders, cart, interactions
+from app.api import products, users, orders, cart, interactions, ip
 from app.database import database
 from app.create_db import create_database
 from app.models import models
@@ -52,6 +52,7 @@ app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
 app.include_router(cart.router, prefix="/api/cart", tags=["cart"])
 app.include_router(interactions.router, prefix="/api/interactions", tags=["interactions"])
+app.include_router(ip.router, prefix="/api/ip", tags=["ip"])
 
 @app.get("/")
 async def root():

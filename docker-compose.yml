@@ -33,5 +33,5 @@ volumes:
 
 networks:
   default:
-    external: true
+    # external: true
     name: shared_network

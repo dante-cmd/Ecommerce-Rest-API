@@ -2,6 +2,23 @@ from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from app.database.database import Base
 
+
+class IP(Base):
+    __tablename__ = "ips"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    ip = Column(String(255), unique=True, index=True)
+    created_at = Column(DateTime, server_default=func.now())
+    # username = Column(String(255), unique=True, index=True)
+    # hashed_password = Column(String(255))
+    # is_active = Column(Boolean, default=True)
+    # is_admin = Column(Boolean, default=False)
+    
+    # Relationships
+    user = relationship("User", back_populates="ips")
+    # cart_items = relationship("CartItem", back_populates="user")
+    # interactions = relationship("UserInteraction", back_populates="user")
+
 class User(Base):
     __tablename__ = "users"
     
@@ -11,12 +28,15 @@ class User(Base):
     hashed_password = Column(String(255))
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
+    ip = Column(String(255), ForeignKey("ips.ip"))
     created_at = Column(DateTime, server_default=func.now())
     
     # Relationships
     orders = relationship("Order", back_populates="user")
     cart_items = relationship("CartItem", back_populates="user")
+    ips = relationship("IP", back_populates="user")
     # interactions = relationship("UserInteraction", back_populates="user")
+
 
 class Product(Base):
     __tablename__ = "products"

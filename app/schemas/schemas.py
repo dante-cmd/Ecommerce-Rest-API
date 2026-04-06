@@ -2,8 +2,15 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 
-
 # User schemas
+
+class IP(BaseModel):
+    id: int
+    ip: str
+
+class IPCreate(BaseModel):
+    ip: str
+
 class UserBase(BaseModel):
     email: str
     username: str
