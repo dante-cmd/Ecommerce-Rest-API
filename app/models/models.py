@@ -9,15 +9,26 @@ class IP(Base):
     id = Column(Integer, primary_key=True, index=True)
     ip = Column(String(255), unique=True, index=True)
     created_at = Column(DateTime, server_default=func.now())
-    # username = Column(String(255), unique=True, index=True)
-    # hashed_password = Column(String(255))
-    # is_active = Column(Boolean, default=True)
-    # is_admin = Column(Boolean, default=False)
     
     # Relationships
-    user = relationship("User", back_populates="ips")
+    user_ips = relationship("UserIP", back_populates="ip")
+    interactions = relationship("Interaction", back_populates="ip")
+    cart_items = relationship("CartItem", back_populates="ip")
     # cart_items = relationship("CartItem", back_populates="user")
-    # interactions = relationship("UserInteraction", back_populates="user")
+    
+#
+class UserIP(Base):
+    __tablename__ = "user_ips"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    ip_id = Column(Integer, ForeignKey("ips.id"), unique=True)  # Each IP can only be associated with one user
+    created_at = Column(DateTime, server_default=func.now())
+
+    # Relationships
+    ip = relationship("IP", back_populates="user_ips")
+    user = relationship("User", back_populates="user_ips")
+    
 
 class User(Base):
     __tablename__ = "users"
@@ -28,14 +39,16 @@ class User(Base):
     hashed_password = Column(String(255))
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
-    ip = Column(String(255), ForeignKey("ips.ip"))
     created_at = Column(DateTime, server_default=func.now())
     
     # Relationships
+    user_ips = relationship("UserIP", back_populates="user")
+
     orders = relationship("Order", back_populates="user")
     cart_items = relationship("CartItem", back_populates="user")
-    ips = relationship("IP", back_populates="user")
-    # interactions = relationship("UserInteraction", back_populates="user")
+    
+    
+    # interactions = relationship("IPInteraction", back_populates="user")
 
 
 class Product(Base):
@@ -89,26 +102,47 @@ class CartItem(Base):
     __tablename__ = "cart_items"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    ip_id = Column(Integer, ForeignKey("ips.id"))  # For anonymous users
+    # user_id = Column(Integer, ForeignKey("users.id"))
     product_id = Column(Integer, ForeignKey("products.id"))
     quantity = Column(Integer)
     
     # Relationships
-    user = relationship("User", back_populates="cart_items")
+    # user = relationship("User", back_populates="cart_items")
+    ip = relationship("IP", back_populates="cart_items")
     product = relationship("Product", back_populates="cart_items")
 
-class UserInteraction(Base):
-    __tablename__ = "user_interactions"
+class Interaction(Base):
+    __tablename__ = "interactions"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer,  nullable=True)  # Make user_id optional
-    # ForeignKey("users.id"),
+    ip_id = Column(Integer, ForeignKey("ips.id"))
     product_id = Column(Integer, ForeignKey("products.id"))
+    # user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # Make user_id optional
     interaction_type = Column(String(50))  # view, click, add_to_cart, purchase, out_of_stock
+
     timestamp = Column(DateTime, server_default=func.now())
-    interaction_metadata = Column(Text)  # Additional information about the interaction
-    ip_address = Column(String(45), nullable=True)  # For tracking anonymous users by IP (IPv6 max length)
+    # interaction_metadata = Column(Text)  # Additional information about the interaction
+    # ip_address = Column(String(45), nullable=True)  # For tracking anonymous users by IP (IPv6 max length)
     
     # Relationships
     # user = relationship("User", back_populates="interactions")
+    ip = relationship("IP", back_populates="interactions")
     product = relationship("Product", back_populates="interactions")
+    
+
+# class UserInteraction(Base):
+#     __tablename__ = "user_interactions"
+#     
+#     id = Column(Integer, primary_key=True, index=True)
+#     user_id = Column(Integer,  nullable=True)  # Make user_id optional
+#     # ForeignKey("users.id"),
+#     product_id = Column(Integer, ForeignKey("products.id"))
+#     interaction_type = Column(String(50))  # view, click, add_to_cart, purchase, out_of_stock
+#     timestamp = Column(DateTime, server_default=func.now())
+#     interaction_metadata = Column(Text)  # Additional information about the interaction
+#     ip_address = Column(String(45), nullable=True)  # For tracking anonymous users by IP (IPv6 max length)
+#     
+#     # Relationships
+#     # user = relationship("User", back_populates="interactions")
+#     product = relationship("Product", back_populates="interactions")

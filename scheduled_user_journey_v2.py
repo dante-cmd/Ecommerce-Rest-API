@@ -489,11 +489,10 @@ def create_interaction(ip: str,
         return response.json()
     return {}
 
-def create_interaction(ip: str, 
-                       product_id: int, 
-                       interaction_type: str,
-                       interaction_metadata: str|None = None,
-                       token: str|None = None) -> Dict[str, Any]:
+def create_interaction(ip: str,
+                       product_id: int,
+                       interaction_type: str
+                       ) -> Dict[str, Any]:
     
     """Create a user interaction"""
     interaction_data = {
@@ -501,17 +500,9 @@ def create_interaction(ip: str,
         "product_id": product_id,
         "interaction_type": interaction_type
     }
-    if interaction_metadata:
-        interaction_data["interaction_metadata"] = interaction_metadata
     
-    if token:
-        response = requests.post(
-            f"{BASE_URL}/api/interactions/", 
-            json=interaction_data,
-            headers={"Authorization": f"Bearer {token}"})
-    else:
-        response = requests.post(f"{BASE_URL}/api/interactions/", 
-        json=interaction_data)
+    response = requests.post(
+            f"{BASE_URL}/api/interactions/", json=interaction_data)
 
     if response.status_code == 201:
         return response.json()

@@ -30,7 +30,7 @@ def get_client_ip(request: Request):
     return request.client.host # type: ignore
 
 
-@router.post("/", 
+@router.post("/",
              response_model=UserInteraction, 
              status_code=status.HTTP_201_CREATED)
 async def create_interaction(

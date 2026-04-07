@@ -126,6 +126,15 @@ class CartItem(CartItemBase):
     class Config:
         from_attributes = True
 
+
+# User Interaction schemas
+class IPInteractionBase(BaseModel):
+    user_id: Optional[int] = None
+    product_id: int
+    interaction_type: str
+    interaction_metadata: Optional[str] = None
+    ip_address: Optional[str] = None
+
 # User Interaction schemas
 class UserInteractionBase(BaseModel):
     user_id: Optional[int] = None

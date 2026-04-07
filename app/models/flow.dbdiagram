@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "darkMode": false,
+  "gridEnabling": false,
+  "detailLevel": "All",
+  "tablePositions": [
+    {
+      "name": "ips",
+      "schemaName": "public",
+      "x": 98.43151370712997,
+      "y": 150.48092001353797
+    },
+    {
+      "name": "user_ips",
+      "schemaName": "public",
+      "x": 509.5706914908619,
+      "y": 201.16881486913343
+    },
+    {
+      "name": "users",
+      "schemaName": "public",
+      "x": 135.80730341832128,
+      "y": -160.86302741425993
+    },
+    {
+      "name": "products",
+      "schemaName": "public",
+      "x": 208.2228959837545,
+      "y": 518.3678291403429
+    },
+    {
+      "name": "orders",
+      "schemaName": "public",
+      "x": 619.3620737674864,
+      "y": -128.1592114169675
+    },
+    {
+      "name": "order_items",
+      "schemaName": "public",
+      "x": 1180.9332253356272,
+      "y": -107.13532970442236
+    },
+    {
+      "name": "cart_items",
+      "schemaName": "public",
+      "x": 1025.8237868766923,
+      "y": 262.3376297382672
+    },
+    {
+      "name": "interactions",
+      "schemaName": "public",
+      "x": 696.4496400468184,
+      "y": 568.7850645870938
+    }
+  ],
+  "tableGroupCollapseStates": [],
+  "stickyNoteLayouts": [],
+  "referencePaths": []
+}

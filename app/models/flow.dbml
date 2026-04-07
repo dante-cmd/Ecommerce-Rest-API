@@ -1,0 +1,99 @@
+// E-commerce Database Structure (based on your SQLAlchemy models)
+// Includes IP tracking for anonymous users + cart + interactions
+
+Table ips {
+  id int [pk, increment]
+  ip varchar(255) [unique, not null]
+  created_at timestamp [default: `now()`]
+
+  Note: 'Stores unique visitor IPs for anonymous tracking'
+}
+
+Table user_ips {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  ip_id int [ref: > ips.id, unique]  // One IP linked to at most one user
+  created_at timestamp [default: `now()`]
+
+  Note: 'Links IPs to registered users'
+}
+
+Table users {
+  id int [pk, increment]
+  email varchar(255) [unique]
+  username varchar(255) [unique]
+  hashed_password varchar(255)
+  is_active boolean [default: true]
+  is_admin boolean [default: false]
+  created_at timestamp [default: `now()`]
+}
+
+Table products {
+  id int [pk, increment]
+  name varchar(500) [not null]
+  description text
+  price float [not null]
+  category varchar(500)
+  image_url varchar(500)
+  stock_quantity int [default: 0]
+  is_available boolean [default: true]
+  created_at timestamp [default: `now()`]
+}
+
+Table orders {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  total_amount float [not null]
+  status varchar(50) [default: 'pending']  // pending, confirmed, shipped, delivered, cancelled
+  payment_method varchar(50)
+  bank varchar(100)
+  created_at timestamp [default: `now()`]
+  updated_at timestamp
+}
+
+Table order_items {
+  id int [pk, increment]
+  order_id int [ref: > orders.id]
+  product_id int [ref: > products.id]
+  quantity int [not null]
+  price float [not null]  // Price at time of purchase
+}
+
+Table cart_items {
+  id int [pk, increment]
+  ip_id int [ref: > ips.id]           // Supports anonymous carts
+  // user_id int [ref: > users.id]    // Commented - you can uncomment if needed
+  product_id int [ref: > products.id]
+  quantity int [not null]
+}
+
+Table interactions {
+  id int [pk, increment]
+  ip_id int [ref: > ips.id]
+  product_id int [ref: > products.id]
+  // user_id int [ref: > users.id]     // Optional for logged-in users
+  interaction_type varchar(50)  // view, click, add_to_cart, purchase, out_of_stock
+  timestamp timestamp [default: `now()`]
+}
+
+// ==================== Relationships (for clarity in dbdiagram) ====================
+
+// // IPs
+// Ref: user_ips.user_id > users.id
+// Ref: user_ips.ip_id > ips.id
+// 
+// // Orders
+// Ref: orders.user_id > users.id
+// Ref: order_items.order_id > orders.id
+// Ref: order_items.product_id > products.id
+// 
+// // Cart (anonymous via IP)
+// Ref: cart_items.ip_id > ips.id
+// Ref: cart_items.product_id > products.id
+// 
+// // Interactions (mainly anonymous via IP)
+// Ref: interactions.ip_id > ips.id
+// Ref: interactions.product_id > products.id
+
+// Optional: If you want to link logged-in user interactions later
+// Ref: interactions.user_id > users.id
