@@ -39,6 +39,7 @@ class User(Base):
     hashed_password = Column(String(255))
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
+    name = Column(String(255))
     created_at = Column(DateTime, server_default=func.now())
     
     # Relationships
@@ -67,7 +68,7 @@ class Product(Base):
     # Relationships
     order_items = relationship("OrderItem", back_populates="product")
     cart_items = relationship("CartItem", back_populates="product")
-    interactions = relationship("UserInteraction", back_populates="product")
+    interactions = relationship("Interaction", back_populates="product")
 
 class Order(Base):
     __tablename__ = "orders"
@@ -118,7 +119,6 @@ class Interaction(Base):
     id = Column(Integer, primary_key=True, index=True)
     ip_id = Column(Integer, ForeignKey("ips.id"))
     product_id = Column(Integer, ForeignKey("products.id"))
-    # user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # Make user_id optional
     interaction_type = Column(String(50))  # view, click, add_to_cart, purchase, out_of_stock
 
     timestamp = Column(DateTime, server_default=func.now())

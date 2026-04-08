@@ -6,22 +6,50 @@ from datetime import datetime
 from typing import List, Dict, Any
 import schedule
 import ipaddress
+from uuid import uuid4
+# from scheduled_user_journey import PAYMENT_METHODS
 
 
 # Base URL for the API (connecting to the app service from inside the container)
 BASE_URL = "http://localhost:8000"
 
-PAYMENT_METHODS = [
-    "credit_card", "debit_card", "paypal", "bank_transfer", 
-    "cash_on_delivery", "digital_wallet"
-]
+payment_methods = {
+    'Digital Wallets (E-wallets)': ['PayPal', 'Apple Pay', 'Google Pay',
+  'Samsung Pay',
+  'Venmo',
+  'Alipay',
+  'WeChat Pay'],
+ 'Credit & Debit Cards': ['Visa',
+  'Mastercard',
+  'American Express',
+  'Discover',
+  'Diners Club'],
+ 'Buy Now, Pay Later (BNPL)': ['Klarna',
+  'Affirm',
+  'Afterpay',
+  'Sezzle',
+  'Zip'],
+ 'Bank Transfers / ACH': ['ACH (USA)',
+  'SEPA (Europe)',
+  'Faster Payments (UK)'],
+ 'Cryptocurrency': ['Bitcoin (BTC)',
+  'Ethereum (ETH)',
+  'USDT',
+  'USDC',
+  'Litecoin'],
+ 'Cash on Delivery (COD)': ['Traditional COD (very common in emerging markets)']}
 
-BANKS = [
-    "Visa", "MasterCard", "American Express", "Discover", 
-    "Chase", "Wells Fargo", "Bank of America", "Citi"
-]
+tasks = ['Select', 'Save', 'Add Cart', 'Remove', 'Order']
+    
+transition = np.asarray([
+        [0.8 , 1.  , 0.88, 0.5 , 1.  ],
+        [0.08, 0.  , 0.05, 0.  , 0.  ],
+        [0.12, 0.  , 0.  , 0.  , 0.  ],
+        [0.  , 0.  , 0.  , 0.  , 0.  ],
+        [0.  , 0.  , 0.07, 0.5 , 0.  ]]
+        )
 
-USER_NAMES = ['Eleanor Vance', 'Marcus Thorne', 'Chloe Zhang', 'Sebastian Rossi',
+names = ['Eleanor Vance', 'Marcus Thorne', 'Chloe Zhang', 'Sebastian Rossi',
        'Isabella Garcia', 'Kenji Tanaka', 'Olivia Chen', 'Elias Vogel',
        'Aisha Mensah', "Liam O'Connell", 'Zoe Papadopoulos',
        'Caleb Murphy', 'Maya Patel', 'Alexander Volkov', 'Sofia Silva',
@@ -141,7 +169,7 @@ USER_NAMES = ['Eleanor Vance', 'Marcus Thorne', 'Chloe Zhang', 'Sebastian Rossi'
        'Iker Hoover', 'Erin Maynard', 'Theodore Hanna', 'Tatum Blackburn',
        'Edgar Boyle', 'Angel Mcmillan']
 
-DOMAINS = [
+domains = [
   "aol.com",
   "att.net",
   "comcast.net",
@@ -300,19 +328,40 @@ DOMAINS = [
 
 # ------------------- START IP -----------------------
 
-def generate_ip():
+def generate_ip_address() -> str:
     """
     That function can generate a total of 4,294,967,296 unique IP addresses
     """
     # Generates a random 32-bit integer and converts it to an IP string
     random_ip = ipaddress.IPv4Address(random.getrandbits(32))
-    response = {"ip":random_ip}
-    return response
+    # response = {"ip":str(random_ip)}
+    return str(random_ip)
 
-def get_ip() -> Dict[str, Any]:
+def get_random_ip_address() -> Dict[str, Any]:
     """Get random IP from the API"""
     try:
         response = requests.get(f"{BASE_URL}/api/ip/random")
+        if response.status_code == 200:
+            return response.json()
+        return dict()
+    except requests.exceptions.ConnectionError:
+        print("Failed to connect to the API. Make sure the service is running.")
+        return dict()
+
+def create_ip_address(ip: str) -> Dict[str, Any]:
+    """Create a new IP address or return existing IP if it already exists"""
+    ip_data = {
+        "ip": ip
+    }
+    response = requests.post(f"{BASE_URL}/api/ip/", json=ip_data)
+    if response.status_code == 201:
+        return response.json()
+    return {}
+
+def get_ip_address_by_ip_address(ip: str) -> Dict[str, Any]:
+    """Get a data of an IP address from the API"""
+    try:
+        response = requests.get(f"{BASE_URL}/api/ip/{ip}")
         if response.status_code == 200:
             return response.json()
         return dict()
@@ -357,7 +406,18 @@ def get_user_by_email(email: str) -> Dict[str, Any]:
         print("Failed to connect to the API. Make sure the service is running.")
         return dict()
 
-def get_or_create_user(username: str, email: str, password: str) -> Dict[str, Any]:
+def register_ip_address_by_user(ip_address_id: int, user_id: int) -> Dict[str, Any]:
+    """Register an IP address for a user"""
+    ip_data = {
+        "ip_id": ip_address_id,
+        "user_id": user_id
+    }
+    response = requests.post(f"{BASE_URL}/api/ips_users/", json=ip_data)
+    if response.status_code == 201:
+        return response.json()
+    return {}
+
+def create_user(username: str, email: str, password: str) -> Dict[str, Any]:
     """Create a new user account or return existing user if email is already registered"""
     user_data = {
         "username": username,
@@ -368,8 +428,8 @@ def get_or_create_user(username: str, email: str, password: str) -> Dict[str, An
     response = requests.post(f"{BASE_URL}/api/users/", json=user_data)
     if response.status_code == 201:
         return response.json()
-    elif response.status_code == 404:
-        return get_user_by_email(user_data["email"])
+    # elif response.status_code == 404:
+    #     return get_user_by_email(user_data["email"])
     return {}
 
 def auth_without_password(email: str) -> Dict[str, Any]:
@@ -427,18 +487,67 @@ def get_product() -> Dict[str, Any]:
         return response.json()
     return {}
 
+def check_product_availability(product: dict):
+    if product["is_available"] and product["stock_quantity"] > 0:
+        return True
+    else:
+        return False
+
+def check_ip_is_used_by_user(ip_address_id: str):
+    """Check if the IP is used by an existing user"""
+    response = requests.get(f"{BASE_URL}/api/ips_users/{ip_address_id}")
+    if response.status_code == 200:
+        return True
+    return False
+
+def get_ip_address_user_by_ip_address_id(ip_address_id: int):
+    """Check if the IP is used by an existing user"""
+    response = requests.get(f"{BASE_URL}/api/ips_users/{ip_address_id}")
+    if response.status_code == 200:
+        return response.json()
+    return {}
+
+def get_user_by_ip_address(ip_address: str) -> Dict[str, Any]:
+    """Get a user by their IP address from the API"""
+    response = requests.get(f"{BASE_URL}/api/ips_users/user/{ip_address}")
+    if response.status_code == 200:
+        return response.json()
+    return {}
+
+def restock_product(product: dict):
+        # Product is out of stock
+    print(f"User tried to add {product['name']} to cart but it's out of stock")
+        
+    # Simulate restocking process
+    print(f"Triggering restock for {product['name']}")
+    new_stock = random.randint(5, 20)
+    updated_product = update_product_stock(product["id"], new_stock)
+    if updated_product:
+            print(f"Restocked {product['name']} with {new_stock} units")
+
+def update_product_stock(product_id: int, new_stock: int) -> Dict[str, Any]:
+    """Update product stock"""
+    product_data = {
+        "stock_quantity": new_stock,
+        "is_available": new_stock > 0
+    }
+    response = requests.put(f"{BASE_URL}/api/products/{product_id}", json=product_data)
+    if response.status_code == 200:
+        return response.json()
+    return {}
+   
 # ------------------ END PRODUCT ---------------------
-def add_to_cart(product_id: int, quantity: int, token: str) -> Dict[str, Any]:
+def add_to_cart(product_id: int, quantity: int, ip_id: int) -> Dict[str, Any]:
     """Add a product to the cart"""
     cart_data = {
         "product_id": product_id,
-        "quantity": quantity
+        "quantity": quantity,
+        "ip_id": ip_id
     }
     
     response = requests.post(
             f"{BASE_URL}/api/cart/", 
-            json=cart_data,
-            headers={"Authorization": f"Bearer {token}"})
+            json=cart_data)
     if response.status_code == 201:
         return response.json()
     return {}
@@ -461,11 +570,11 @@ def create_order(
         return response.json()
     return {}
 
-def create_interaction(ip: str, 
-                       product_id: int, 
+def create_interaction(ip: str,
+                       product_id: int,
                        interaction_type: str,
-                       interaction_metadata: str|None = None,
-                       token: str|None = None) -> Dict[str, Any]:
+                       token: str|None = None
+                       ) -> Dict[str, Any]:
     
     """Create a user interaction"""
     interaction_data = {
@@ -473,9 +582,7 @@ def create_interaction(ip: str,
         "product_id": product_id,
         "interaction_type": interaction_type
     }
-    if interaction_metadata:
-        interaction_data["interaction_metadata"] = interaction_metadata
-    
+
     if token:
         response = requests.post(
             f"{BASE_URL}/api/interactions/", 
@@ -488,38 +595,9 @@ def create_interaction(ip: str,
     if response.status_code == 201:
         return response.json()
     return {}
-
-def create_interaction(ip: str,
-                       product_id: int,
-                       interaction_type: str
-                       ) -> Dict[str, Any]:
     
-    """Create a user interaction"""
-    interaction_data = {
-        "ip": ip,
-        "product_id": product_id,
-        "interaction_type": interaction_type
-    }
-    
-    response = requests.post(
-            f"{BASE_URL}/api/interactions/", json=interaction_data)
-
-    if response.status_code == 201:
-        return response.json()
-    return {}
-
-
-
-def update_product_stock(product_id: int, new_stock: int) -> Dict[str, Any]:
-    """Update product stock"""
-    product_data = {
-        "stock_quantity": new_stock,
-        "is_available": new_stock > 0
-    }
-    response = requests.put(f"{BASE_URL}/api/products/{product_id}", json=product_data)
-    if response.status_code == 200:
-        return response.json()
-    return {}
+    # response = requests.post(
+    #         f"{BASE_URL}/api/interactions/", json=interaction_data)
 
 def convert_username(x:str) -> str:
     return x.replace("'", '').lower().replace(' ', '.')
@@ -535,39 +613,34 @@ def simulate_user_journey():
     is_new_device = np.random.choice(
         [True, False], p=[0.12, 0.88], replace=False)
     
+    def complete_generator_of_ip_address():
+        ip = generate_ip_address()
+        db_created_ip = create_ip_address(ip)
+        if db_created_ip:
+            ip_address_id = db_created_ip['id']
+        else:
+            db_ip = get_ip_address_by_ip_address(ip)
+            ip_address_id = db_ip['id']
+
+        return {'id': ip_address_id, 'ip':ip}
+    
     if is_new_device:
-        db_ip = generate_ip()
+        ip_data = complete_generator_of_ip_address()
+        ip = ip_data['ip']
+        ip_address_id = ip_data['id']
+
     else:
-        db_ip = get_ip()
-        if db_ip:
-            db_ip = generate_ip()
+        db_ip = get_random_ip_address()
+        if not db_ip:
+            ip_data = complete_generator_of_ip_address()
+            ip = ip_data['ip']
+            ip_address_id = ip_data['id']
+        else:
+            ip = db_ip['ip']
+            ip_address_id = db_ip['id']
         
-    ip = db_ip['ip']
-      
-    # 2. Get IP from existing
-
-    # Get all products
-    # products = get_all_products()
-    # if not products:
-    #    print("No products available. Exiting simulation.")
-    #    return
-    # print(f"Found {len(products)} products")
-    
-    # Randomly decide if the visitor will create a new account 
-    # or continue as visitor without creating an account
-    db_product = get_product()
-    
-    tasks = ['Select', 'Save', 'Add Cart', 'Remove', 'Order']
-    
-    transition = np.asarray([
-        [0.8 , 1.  , 0.88, 0.5 , 1.  ],
-        [0.08, 0.  , 0.05, 0.  , 0.  ],
-        [0.12, 0.  , 0.  , 0.  , 0.  ],
-        [0.  , 0.  , 0.  , 0.  , 0.  ],
-        [0.  , 0.  , 0.07, 0.5 , 0.  ]]
-        )
-
-    n_interactions = random.randint(1, 20)
+    # Set number of interactions for this user journey (between 1 and 50)
+    n_interactions = random.randint(1, 50)
     
 
     def trajectory(task:str, n:int, 
@@ -575,31 +648,154 @@ def simulate_user_journey():
         
         # ['Select', 'Save', 'Add Cart', 'Remove', 'Order']
         if task == 'Select':
-            db_product['id']
-            create_interaction()
-            pass
+            db_product = get_product()
+            if db_product:
+                data['Select'].append(db_product)
+                interaction = create_interaction(ip_address_id, db_product['id'], 'Select')
+        
         elif task == 'Save':
-            create_interaction()
-            pass
+            db_product = data['Select'][-1]
+            if check_product_availability(db_product):
+                data['Save'].append(db_product)
+                interaction = create_interaction(ip_address_id, db_product['id'], 'Save')
+                # create_interaction()
+            else:
+                interaction = create_interaction(ip_address_id, db_product['id'], 'Out of stock')
+                # Fill with the IP of seller or warehouse instead of the IP of the user
+                updated_product = restock_product(db_product)
+                if updated_product:
+                    interaction = create_interaction(ip_address_id, db_product['id'], 'Restock')
+                # create_interaction()
+           
         elif task == 'Add Cart':
-            create_interaction()
-            pass
-        elif task == 'Remove':
-            create_interaction()
-            pass
-        elif task == 'Order':
-            create_interaction()
-            pass
-        else:
-            raise "Task not found"
+            db_product = data['Select'][-1]
+            if check_product_availability(db_product):
+                data['Add Cart'].append(db_product)
+                
+                interaction = create_interaction(ip_address_id, db_product['id'], 'Add Cart')
+                # create_interaction()
+                
+            else:
+                interaction = create_interaction(ip_address_id, db_product['id'], 'Out of stock')
+                updated_product = restock_product(db_product)
+                if updated_product:
+                    interaction = create_interaction(ip_address_id, db_product['id'], 'Restock')
+                # create_interaction()
             
+        elif task == 'Remove':
+            if data['Add Cart']:
+                db_product = np.random.choice(data['Add Cart'])
+                data['Select'].remove(db_product)
+                data['Add Cart'].remove(db_product)
+                data['Remove'].append(db_product)
+                interaction = create_interaction(ip_address_id, db_product['id'], 'Remove')
+                # create_interaction()
+        elif task == 'Order':
+            # 1. Add method of payment and bank
+            payment_method = np.random.choice(list(payment_methods.keys()))
+            bank = np.random.choice(payment_methods[payment_method])
+
+            # 2. Add address
+            # address = '123 Main St, Anytown, USA'
+
+            # 3. Add an account if the user is a visitor and wants to create an account at this stage
+            
+            # if IP is related to an existing user We will login to that account.
+            # otherwise we will create a new account for that user
+            
+            # If is a new device, we will create a new account for that user and add this IP to that account.
+            
+            if is_new_device:
+                # Generate a random username and email for the new user
+
+                # If the username or email is already registered, we will add this ip to the existing user with that username or email and login to that account instead of creating a new account
+
+                pass
+            
+            else:
+                ip_address_user = get_ip_address_user_by_ip_address_id(ip_address_id)
+                
+                # We need to check if this IP is already associated with an existing user, if not we will create a new account for that user and add this IP to that account. If yes, we will login to that account.
+                if not ip_address_user:
+                    name = random.choice(names)
+                    random_number = random.randint(100, 999)
+                    username = convert_username(name) + '.' + str(random_number)
+                    domain = random.choice(domains)
+                    email = username + "@" + domain
+
+                    password = uuid4().hex[:8]
+                    # if the email is already registered, 
+                    # We will add this ip to the existing user with that email and login to that account instead of creating a new account 
+                    user = create_user(username, email, password)
+                    if not user:
+                        user = get_user_by_email(email)
+                        user_id = user['id']
+                        ip_address_by_user = register_ip_address_by_user(ip_address_id, user_id)
+                        if not ip_address_by_user:
+                            pass
+
+                        auth_response = auth_without_password(user['email'])
+                        # print("Failed to create user. Exiting simulation.")
+                        # return
+                    else:
+                        user_id = user['id']
+                        ip_address_by_user = register_ip_address_by_user(ip_address_id, user_id)
+                        auth_response = auth(email, password)
+            
+                else:
+                    # This IP is already associated with an existing user, so we will continue as a visitor without creating an account
+                    # ip_address_id = ip_address_user['ip_id'] 
+                    # user_id = ip_address_user['user_id'] 
+                    # ip_address_by_user = register_ip_address_by_user(
+                    #     ip_address_user['ip_id'] , ip_address_user['user_id'] )
+                    user = get_user_by_ip(ip_address_id)
+                    auth_response = auth_without_password(user['email'])
+                    pass
+
+            token = auth_response["access_token"]
+
+            # Prepare order items
+            order_items = [
+                {"product_id": item["product_id"], "quantity": item["quantity"]} 
+                for item in data['Add Cart']
+            ]
+            
+            # 4. Create order with all products in the cart
+
+            order = create_order(order_items, payment_method, bank, token)
+
+            if order:
+                print(f"Order created successfully (ID: {order['id']})")
+                print(f"Total amount: ${order['total_amount']:.2f}")
+                print(f"Payment method: {payment_method} ({bank})")
+                
+                # 6. Create interactions for all products in the order
+                for item in data['Add Cart']:
+                    # interaction_metadata = f"order_id: {order['id']}, quantity: {item['quantity']}, total: {order['total_amount']:.2f}"
+                    interaction = create_interaction(
+                        ip_address_id, item["product_id"], "Purchase",
+                        token=token)
+                    if interaction:
+                        interactions.append(interaction)
+            else:
+                print("Failed to create order")
+            # 5. Update stock of products in the order
+
+            
+
+            # 7. Send an email confirmation (we can simulate this by creating an interaction of type "email_confirmation_sent")
+
+            # 8. Clear cart and start over with a new product selection
+
+            data['Select'].clear()
+            data['Add Cart'].clear()
+            data['Remove'].clear()
+            data['Order'].clear()
+        else:
+            raise ValueError("Task not found")
+
         interactions.append(10)
         # create interaction
-        data['selected'].append()
-        data['saved'].append()
-        data['in_cart'].append()
-        data['ordered'].append()
-        # data.append(task)
         if n == 1:
             return data 
         else:
@@ -607,205 +803,14 @@ def simulate_user_journey():
             idx = tasks.index(task)
             prob = transition[:,idx].copy()
             next_task = np.random.choice(tasks, p=prob, replace=False)
-            return trajectory(next_task, n, data)
-    
-    def select():
-        pass
-    
-    def save():
-        pass
-    
-    def add_card():
-        pass
-    
-    def remove():
-        pass
-
-    def order():
-        pass
-    # Interactions
+            return trajectory(next_task, n, data, interactions)
+        
+    ww = trajectory(random.choice(tasks), n_interactions, 
+               {'Select': [], 'Save': [], 'Add Cart': [], 'Remove': [], 'Order': []}, interactions=[])
     
     # Select
     # Save
     # Add card
-    db_product['id']
-    
-    is_visitor = random.choice([True, False])
-
-    if is_visitor:
-        username, email, password = None, None, None
-        user_id = None
-        token = None
-        
-        # This visitor wants to create a new account later in the journey, so we will create interactions 
-        # 
-        want_a_new_account = random.choice([True, False])
-        if want_a_new_account:
-            # Create a new account
-            username = random.choice(USER_NAMES)
-            email = convert_username(username) + "@" + random.choice(DOMAINS) # "@example.com"
-            password = convert_username(username)
-            
-            # Create user or get existing user if email is already registered
-            user = get_or_create_user(username, email, password)
-            
-            # Authenticate a user and get an access token
-            auth_response = auth(email, password)
-            token = auth_response["access_token"]
-
-            if not user:
-                print("Failed to create user. Exiting simulation.")
-                return
-                
-            user_id = user["id"]
-            print(f"Created new user: {user['username']} (ID: {user_id})")
-        else:
-            print("Continuing as visitor without creating an account")
-        
-    else:
-        total_user = get_total_user()
-        if total_user == 0:
-            username = random.choice(USER_NAMES) # + str(random.randint(100, 999))
-            email = convert_username(username) + "@" + random.choice(DOMAINS) # "@example.com"
-            password = convert_username(username)
-            
-            # Create user or get existing user if email is already registered
-            user = get_or_create_user(username, email, password)
-            
-            # Authenticate a user and get an access token
-            auth_response = auth(email, password)
-            token = auth_response["access_token"]
-
-            if not user:
-                print("Failed to create user. Exiting simulation.")
-                return
-            
-        user_id = np.random.randint(0, total_user['Total'])
-        user = get_user_by_id(user_id)
-        
-        auth_response = auth_without_password(user['email'])
-        token = auth_response["access_token"]
-
-        print(f"Using existing account (User ID: {user_id})")
-
-    
-    # Track user interactions
-    interactions = []
-    
-    # Randomly decide how many products the user will view
-    num_products_to_view = random.randint(3, 10)
-    print(f"User will view {num_products_to_view} products")
-    
-    # Select random products to view
-    viewed_products = random.sample(products, num_products_to_view) 
-    # min(num_products_to_view, len(products)))
-
-    products_in_basket = []
-    
-    # Simulate viewing products
-    # For each product, we will randomly decide if the user will click on it,
-    # add it to cart, or just view it and move on
-    for product in viewed_products:
-        # Record view interaction
-        interaction = create_interaction(
-            user_id=user_id, 
-            product_id=product["id"], 
-            interaction_type="view", 
-            interaction_metadata=None,
-            token=token)
-        if interaction:
-            interactions.append(interaction)
-            print(f"User viewed product: {product['name']}")
-
-        # Randomly decide if the user will try to add to cart
-        if random.choice([True, False]):
-            if not token:
-                print("User is not authenticated, skipping add to cart")
-                continue
-
-            # Check if product is available
-            if product["is_available"] and product["stock_quantity"] > 0:
-                # Randomly decide quantity to add
-                quantity = random.randint(1, min(3, product["stock_quantity"]))
-                
-                # Add to cart
-                cart_item = add_to_cart(product["id"], quantity, token=token)
-                if cart_item:
-                    print(f"User added {quantity} x {product['name']} to cart")
-                    
-                    # Record add_to_cart interaction
-                    interaction_metadata = f"quantity: {quantity}"
-                    interaction = create_interaction(
-                        user_id, product["id"], "add_to_cart", interaction_metadata, 
-                        token=token)
-                    if interaction:
-                        interactions.append(interaction)
-                    
-                    # Add to purchased products list for potential checkout
-                    products_in_basket.append({
-                        "product_id": product["id"],
-                        "quantity": quantity,
-                        "product": product
-                    })
-                else:
-                    print(f"Failed to add {product['name']} to cart")
-            else:
-                # Product is out of stock
-                print(f"User tried to add {product['name']} to cart but it's out of stock")
-                
-                # Record out_of_stock interaction
-                interaction = create_interaction(
-                    user_id, product["id"], "out_of_stock", token=token)
-                
-                if interaction:
-                    interactions.append(interaction)
-                
-                # Simulate restocking process
-                print(f"Triggering restock for {product['name']}")
-                new_stock = random.randint(5, 20)
-                updated_product = update_product_stock(product["id"], new_stock)
-                if updated_product:
-                    print(f"Restocked {product['name']} with {new_stock} units")
-        
-        # Random delay to simulate real browsing
-        time.sleep(random.uniform(0.5, 2.0))
-    
-    # Randomly decide if the user will make a purchase
-    if products_in_basket and random.choice([True, False, True]):  # 66% chance to purchase
-        print(f"User is proceeding to checkout with {len(products_in_basket)} items")
-        if not token:
-            print("User is not authenticated, skipping purchase")
-            return
-        
-        # Prepare order items
-        order_items = [
-            {"product_id": item["product_id"], "quantity": item["quantity"]} 
-            for item in products_in_basket
-        ]
-        
-        # Select random payment method and bank
-        payment_method = random.choice(PAYMENT_METHODS)
-        bank = random.choice(BANKS)
-        
-        # Create order
-        order = create_order(order_items, payment_method, bank, token)
-        if order:
-            print(f"Order created successfully (ID: {order['id']})")
-            print(f"Total amount: ${order['total_amount']:.2f}")
-            print(f"Payment method: {payment_method} ({bank})")
-            
-            # Record purchase interaction
-            for item in products_in_basket:
-                interaction_metadata = f"order_id: {order['id']}, quantity: {item['quantity']}, total: {order['total_amount']:.2f}"
-                interaction = create_interaction(
-                    user_id, item["product_id"], "purchase", interaction_metadata,
-                    token=token)
-                if interaction:
-                    interactions.append(interaction)
-        else:
-            print("Failed to create order")
-    else:
-        print("User did not proceed with purchase")
     
     print(f"=== User Journey Simulation Completed at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===")
     print(f"Total interactions recorded: {len(interactions)}")

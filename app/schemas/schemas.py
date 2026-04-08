@@ -2,15 +2,34 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 
-# User schemas
 
-class IP(BaseModel):
+# --------------- UserIP schemas -----------------
+class UserIPBase(BaseModel):
+    user_id: int
+    ip_id: int
+
+class UserIPCreate(UserIPBase):
+    pass
+
+class UserIP(UserIPBase):
+    pass
+
+# -------------- End IP schemas --------------
+
+# --------------- IP schemas -----------------
+class IPBase(BaseModel):
+    ip: str
+
+class IPCreate(IPBase):
+    pass
+
+class IP(IPBase):
     id: int
-    ip: str
+    pass
 
-class IPCreate(BaseModel):
-    ip: str
+# -------------- End IP schemas --------------
 
+# -------------- User schemas ----------------
 class UserBase(BaseModel):
     email: str
     username: str
@@ -32,6 +51,8 @@ class User(UserBase):
     class Config:
         from_attributes = True
 
+# ----------- End User schemas --------------
+
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -39,7 +60,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     user_id: int
 
-# Product schemas
+# ----------- Product schemas --------------
 class ProductBase(BaseModel):
     name: str
     description: Optional[str] = None
@@ -65,7 +86,10 @@ class Product(ProductBase):
     class Config:
         from_attributes = True
 
-# Order schemas
+# --------- End Product schemas ------------
+
+
+# ------------- Order schemas ------------
 class OrderItemBase(BaseModel):
     product_id: int
     quantity: int
@@ -107,6 +131,7 @@ class Order(OrderBase):
     
     class Config:
         from_attributes = True
+# --------- End Order schemas ------------
 
 # Cart schemas
 class CartItemBase(BaseModel):
@@ -128,26 +153,18 @@ class CartItem(CartItemBase):
 
 
 # User Interaction schemas
-class IPInteractionBase(BaseModel):
-    user_id: Optional[int] = None
+
+class InteractionBase(BaseModel):
+    ip_id: str
     product_id: int
     interaction_type: str
-    interaction_metadata: Optional[str] = None
-    ip_address: Optional[str] = None
+    # ip_address: Optional[str] = None
 
-# User Interaction schemas
-class UserInteractionBase(BaseModel):
-    user_id: Optional[int] = None
-    product_id: int
-    interaction_type: str
-    interaction_metadata: Optional[str] = None
-    ip_address: Optional[str] = None
-
-class UserInteractionCreate(UserInteractionBase):
+class InteractionCreate(InteractionBase):
     pass
     # timestamp: datetime
 
-class UserInteraction(UserInteractionBase):
+class Interaction(InteractionBase):
     id: int
     # timestamp: datetime
     

@@ -11,24 +11,18 @@ router = APIRouter()
 
 @router.post("/", response_model=IP, status_code=status.HTTP_201_CREATED)
 def register_ip(ip: IPCreate, db: Session = Depends(get_db)):
-    # Check if user already exists (only ip is unique)
+    # Check if ip already exists (only ip is unique)
     db_ip = db.query(IPModel).filter(IPModel.ip == ip.ip).first()
     if db_ip:
         raise HTTPException(status_code=400, detail="IP already registered")
 
-    # Create user
-    db_ip = IPModel(
-        email=ip.ip
-    )
+    # Create ip
+    db_ip = IPModel(ip = ip.ip)
     db.add(db_ip)
     db.commit()
     db.refresh(db_ip)
     return db_ip
 
-@router.get("/", response_model=List[IP])
-def get_ips(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    ips = db.query(IPModel).order_by(IPModel.id).offset(skip).limit(limit).all()
-    return ips
 
 @router.get("/random", response_model=IP)
 def get_random_ip(db: Session = Depends(get_db)):
@@ -37,9 +31,9 @@ def get_random_ip(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="IP not found")
     return db_ip
 
-@router.get("/{ip_id}", response_model=IP)
-def get_ip_by_id(ip_id: int, db: Session = Depends(get_db)):
-    db_user = db.query(IPModel).filter(IPModel.id == ip_id).first()
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
+@router.get("/{ip}", response_model=IP)
+def read_ip(ip: str, db: Session = Depends(get_db)):
+    db_ip = db.query(IPModel).filter(IPModel.ip == ip).first()
+    if db_ip is None:
+        raise HTTPException(status_code=404, detail="IP not found")
+    return db_ip
