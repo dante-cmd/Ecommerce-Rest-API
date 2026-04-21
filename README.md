@@ -127,6 +127,10 @@ To run tests with coverage:
 pytest --cov=app
 ```
 
+## Database Schema
+
+https://dbdiagram.io/
+
 ## License
 
 This project is licensed under the MIT License.

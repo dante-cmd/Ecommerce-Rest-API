@@ -170,3 +170,8 @@ curl -X POST "http://localhost:8000/api/interacciones/" \
 3. Cada usuario solo puede acceder a su propio carrito y órdenes.
 4. Solo los administradores pueden crear productos y ver todas las órdenes e interacciones.
 5. Las interacciones pueden ser registradas por usuarios anónimos (se guarda su IP) o autenticados (se asocia a su cuenta).
+
+
+## Event driven
+
+https://docs.cloud.google.com/eventarc/docs/event-driven-architectures

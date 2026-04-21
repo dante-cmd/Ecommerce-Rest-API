@@ -17,9 +17,9 @@ async def create_interaction(
     
     # Create interaction with user info if authenticated, otherwise just IP
     db_interaction = InteractionModel(
-        ip_id=interaction.ip_id,
-        product_id=interaction.product_id,
+        ip_address_id=interaction.ip_address_id,
         interaction_type=interaction.interaction_type,
+        interaction_metadata=interaction.interaction_metadata if interaction.interaction_metadata else None
         # interaction_metadata=interaction.interaction_metadata,
         # ip_address=client_ip if not current_user else None  
         # Only store IP for anonymous users

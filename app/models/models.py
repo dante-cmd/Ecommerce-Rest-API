@@ -3,32 +3,18 @@ from sqlalchemy.orm import relationship
 from app.database.database import Base
 
 
-class IP(Base):
-    __tablename__ = "ips"
+class IPAddress(Base):
+    __tablename__ = "ip_addresses"
     
     id = Column(Integer, primary_key=True, index=True)
-    ip = Column(String(255), unique=True, index=True)
+    ip_address = Column(String(255), unique=True, index=True)
     created_at = Column(DateTime, server_default=func.now())
     
     # Relationships
-    user_ips = relationship("UserIP", back_populates="ip")
-    interactions = relationship("Interaction", back_populates="ip")
-    cart_items = relationship("CartItem", back_populates="ip")
-    # cart_items = relationship("CartItem", back_populates="user")
-    
-#
-class UserIP(Base):
-    __tablename__ = "user_ips"
+    user_ip = relationship("UserIPAddress", back_populates="ip_address")
+    interactions = relationship("Interaction", back_populates="ip_address")
+    cart_items = relationship("CartItem", back_populates="ip_address")
 
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    ip_id = Column(Integer, ForeignKey("ips.id"), unique=True)  # Each IP can only be associated with one user
-    created_at = Column(DateTime, server_default=func.now())
-
-    # Relationships
-    ip = relationship("IP", back_populates="user_ips")
-    user = relationship("User", back_populates="user_ips")
-    
 
 class User(Base):
     __tablename__ = "users"
@@ -39,18 +25,27 @@ class User(Base):
     hashed_password = Column(String(255))
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
-    name = Column(String(255))
+    full_name = Column(String(255))
     created_at = Column(DateTime, server_default=func.now())
     
     # Relationships
-    user_ips = relationship("UserIP", back_populates="user")
-
-    orders = relationship("Order", back_populates="user")
+    user_ip = relationship("UserIPAddress", back_populates="user")
+    order = relationship("Order", back_populates="user")
     cart_items = relationship("CartItem", back_populates="user")
-    
-    
-    # interactions = relationship("IPInteraction", back_populates="user")
 
+
+class UserIPAddress(Base):
+    __tablename__ = "user_ip_addresses"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    ip_address_id = Column(Integer, ForeignKey("ip_address.id"), unique=True)  # Each IPAddress can only be associated with one user
+    created_at = Column(DateTime, server_default=func.now())
+
+    # Relationships
+    ip_address = relationship("IPAddress", back_populates="user_ip")
+    user = relationship("User", back_populates="user_ip")
+    
 
 class Product(Base):
     __tablename__ = "products"
@@ -83,7 +78,7 @@ class Order(Base):
     updated_at = Column(DateTime, onupdate=func.now())
     
     # Relationships
-    user = relationship("User", back_populates="orders")
+    user = relationship("User", back_populates="order")
     order_items = relationship("OrderItem", back_populates="order")
 
 class OrderItem(Base):
@@ -103,32 +98,30 @@ class CartItem(Base):
     __tablename__ = "cart_items"
     
     id = Column(Integer, primary_key=True, index=True)
-    ip_id = Column(Integer, ForeignKey("ips.id"))  # For anonymous users
-    # user_id = Column(Integer, ForeignKey("users.id"))
+    ip_address_id = Column(Integer, ForeignKey("ip_addresses.id"))  
     product_id = Column(Integer, ForeignKey("products.id"))
     quantity = Column(Integer)
     
     # Relationships
-    # user = relationship("User", back_populates="cart_items")
-    ip = relationship("IP", back_populates="cart_items")
+    ip_address = relationship("IPAddress", back_populates="cart_items")
     product = relationship("Product", back_populates="cart_items")
 
 class Interaction(Base):
     __tablename__ = "interactions"
     
     id = Column(Integer, primary_key=True, index=True)
-    ip_id = Column(Integer, ForeignKey("ips.id"))
-    product_id = Column(Integer, ForeignKey("products.id"))
+    ip_address_id = Column(Integer, ForeignKey("ip_addresses.id"))
     interaction_type = Column(String(50))  # view, click, add_to_cart, purchase, out_of_stock
-
-    timestamp = Column(DateTime, server_default=func.now())
-    # interaction_metadata = Column(Text)  # Additional information about the interaction
-    # ip_address = Column(String(45), nullable=True)  # For tracking anonymous users by IP (IPv6 max length)
+    interaction_metadata = Column(Text, nullable=True, default=None)  # Additional information about the interaction
+    created_at = Column(DateTime, server_default=func.now())
+    # product_id = Column(Integer, ForeignKey("products.id"))
+    
+    # ip_address = Column(String(45), nullable=True)  # For tracking anonymous users by IPAddress (IPv6 max length)
     
     # Relationships
     # user = relationship("User", back_populates="interactions")
-    ip = relationship("IP", back_populates="interactions")
-    product = relationship("Product", back_populates="interactions")
+    ip_address = relationship("IPAddress", back_populates="interactions")
+    # product = relationship("Product", back_populates="interactions")
     
 
 # class UserInteraction(Base):
@@ -141,7 +134,7 @@ class Interaction(Base):
 #     interaction_type = Column(String(50))  # view, click, add_to_cart, purchase, out_of_stock
 #     timestamp = Column(DateTime, server_default=func.now())
 #     interaction_metadata = Column(Text)  # Additional information about the interaction
-#     ip_address = Column(String(45), nullable=True)  # For tracking anonymous users by IP (IPv6 max length)
+#     ip_address = Column(String(45), nullable=True)  # For tracking anonymous users by IPAddress (IPv6 max length)
 #     
 #     # Relationships
 #     # user = relationship("User", back_populates="interactions")

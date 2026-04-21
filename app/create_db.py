@@ -7,9 +7,10 @@ DATABASE = "master"  # Base de datos master para crear la nueva base de datos
 USERNAME = "sa"
 PASSWORD = "YourStrong@Passw0rd"
 AGAIN = True 
+NAME_DB = "ecommerce_db"
 # Create the database again (True, only for dev)
 
-def create_database():
+def drop_if_exists_and_create_db():
     try:
         # Usar pymssql
         conn = pymssql.connect(
@@ -18,26 +19,13 @@ def create_database():
             password=PASSWORD,
             database=DATABASE
         )
+        
         conn.autocommit(True)
         cursor = conn.cursor()
-        if AGAIN:
-            cursor.execute("DROP DATABASE IF EXISTS ecommerce_db")
-            print("Base de datos 'ecommerce_db' Eliminadas exitosamente")
-            cursor.execute("CREATE DATABASE ecommerce_db")
-            print("Base de datos 'ecommerce_db' creada exitosamente")
-        else:
-        
-            # Verificar si la base de datos existe
-            cursor.execute("SELECT name FROM sys.databases WHERE name = 'ecommerce_db'")
-            result = cursor.fetchone()
-            
-            if not result:
-                # Crear la base de datos si no existe
-                cursor.execute("CREATE DATABASE ecommerce_db")
-            
-            print("Base de datos 'ecommerce_db' creada exitosamente")
-        
-        # Cerrar la conexión
+        cursor.execute(f"DROP DATABASE IF EXISTS {NAME_DB}")
+        print(f"Base de datos '{NAME_DB}' Eliminadas exitosamente")
+        cursor.execute(f"CREATE DATABASE {NAME_DB}")
+        print(f"Base de datos '{NAME_DB}' creada exitosamente")
         cursor.close()
         conn.close()
         
@@ -45,4 +33,4 @@ def create_database():
         print(f"Error al crear la base de datos: {e}")
 
 if __name__ == "__main__":
-    create_database()
+    drop_if_exists_and_create_db()

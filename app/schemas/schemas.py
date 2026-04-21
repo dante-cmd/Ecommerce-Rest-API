@@ -4,26 +4,26 @@ from datetime import datetime
 
 
 # --------------- UserIP schemas -----------------
-class UserIPBase(BaseModel):
+class UserIPAddressBase(BaseModel):
     user_id: int
-    ip_id: int
+    ip_address_id: int
 
-class UserIPCreate(UserIPBase):
+class UserIPAddressCreate(UserIPAddressBase):
     pass
 
-class UserIP(UserIPBase):
+class UserIPAddress(UserIPAddressBase):
     pass
 
 # -------------- End IP schemas --------------
 
 # --------------- IP schemas -----------------
 class IPBase(BaseModel):
-    ip: str
+    ip_address: str
 
-class IPCreate(IPBase):
+class IPAddressCreate(IPBase):
     pass
 
-class IP(IPBase):
+class IPAddress(IPBase):
     id: int
     pass
 
@@ -33,6 +33,7 @@ class IP(IPBase):
 class UserBase(BaseModel):
     email: str
     username: str
+    full_name: str
 
 class UserCreate(UserBase):
     password: str
@@ -155,9 +156,10 @@ class CartItem(CartItemBase):
 # User Interaction schemas
 
 class InteractionBase(BaseModel):
-    ip_id: str
-    product_id: int
+    ip_address_id: str
+    # product_id: int
     interaction_type: str
+    interaction_metadata: Optional[str]=None
     # ip_address: Optional[str] = None
 
 class InteractionCreate(InteractionBase):

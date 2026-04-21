@@ -1,21 +1,13 @@
 // E-commerce Database Structure (based on your SQLAlchemy models)
 // Includes IP tracking for anonymous users + cart + interactions
 
-Table ips {
+Table ip_addresses {
   id int [pk, increment]
-  ip varchar(255) [unique, not null]
+  ip_address varchar(255) [unique, not null]
+  device_info text // Optional: Store device/browser info for better analytics
   created_at timestamp [default: `now()`]
 
-  Note: 'Stores unique visitor IPs for anonymous tracking'
-}
-
-Table user_ips {
-  id int [pk, increment]
-  user_id int [ref: > users.id]
-  ip_id int [ref: > ips.id, unique]  // One IP linked to at most one user
-  created_at timestamp [default: `now()`]
-
-  Note: 'Links IPs to registered users'
+  Note: 'Stores unique visitor ip_address for anonymous tracking'
 }
 
 Table users {
@@ -25,8 +17,20 @@ Table users {
   hashed_password varchar(255)
   is_active boolean [default: true]
   is_admin boolean [default: false]
+  full_name varchar(255)
   created_at timestamp [default: `now()`]
 }
+
+Table user_ip_addresses {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  ip_address_id int [ref: > ip_addresses.id, unique]  // One IP linked to at most one user
+  created_at timestamp [default: `now()`]
+
+  Note: 'Links ip_address to registered users'
+}
+
+
 
 Table products {
   id int [pk, increment]
@@ -61,23 +65,22 @@ Table order_items {
 
 Table cart_items {
   id int [pk, increment]
-  ip_id int [ref: > ips.id]           // Supports anonymous carts
-  // user_id int [ref: > users.id]    // Commented - you can uncomment if needed
+  ip_address_id int [ref: > ip_addresses.id]           // Supports anonymous carts
   product_id int [ref: > products.id]
   quantity int [not null]
 }
 
+// 
 Table interactions {
   id int [pk, increment]
-  ip_id int [ref: > ips.id]
-  product_id int [ref: > products.id]
-  // user_id int [ref: > users.id]     // Optional for logged-in users
+  ip_address_id int [ref: > ip_addresses.id]
+  // product_id int [ref: > products.id]
   interaction_type varchar(50)  // view, click, add_to_cart, purchase, out_of_stock
-  timestamp timestamp [default: `now()`]
+  created_at timestamp [default: `now()`]
 }
 
 // ==================== Relationships (for clarity in dbdiagram) ====================
-
+// {"id_address": ""}
 // // IPs
 // Ref: user_ips.user_id > users.id
 // Ref: user_ips.ip_id > ips.id

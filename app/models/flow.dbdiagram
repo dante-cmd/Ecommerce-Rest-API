@@ -1,56 +1,56 @@
 {
   "version": "1.0.0",
-  "darkMode": true,
+  "darkMode": false,
   "gridEnabling": false,
   "detailLevel": "All",
   "tablePositions": [
     {
-      "name": "ips",
+      "name": "ip_addresses",
       "schemaName": "public",
-      "x": 96.79539533750085,
-      "y": 146.11793769452697
-    },
-    {
-      "name": "user_ips",
-      "schemaName": "public",
-      "x": 557.5634969999828,
-      "y": 194.62434139061693
+      "x": 29.395978657465804,
+      "y": -134.42781972546516
     },
     {
       "name": "users",
       "schemaName": "public",
-      "x": 194.73404768884237,
-      "y": -205.64735305985596
+      "x": 29.395978657465804,
+      "y": -472.42781972546516
+    },
+    {
+      "name": "user_ip_addresses",
+      "schemaName": "public",
+      "x": 323.7475411574658,
+      "y": -134.42781972546516
     },
     {
       "name": "products",
       "schemaName": "public",
-      "x": 208.2228959837545,
-      "y": 518.3678291403429
+      "x": 585.2577950637158,
+      "y": -134.42781972546516
     },
     {
       "name": "orders",
       "schemaName": "public",
-      "x": 619.3620737674864,
-      "y": -128.1592114169675
+      "x": 883.5253731887158,
+      "y": -134.42781972546516
     },
     {
       "name": "order_items",
       "schemaName": "public",
-      "x": 1180.9332253356272,
-      "y": -107.13532970442236
+      "x": 29.395978657465804,
+      "y": 75.57218027453484
     },
     {
       "name": "cart_items",
       "schemaName": "public",
-      "x": 1025.8237868766923,
-      "y": 262.3376297382672
+      "x": 323.7475411574658,
+      "y": 75.57218027453484
     },
     {
       "name": "interactions",
       "schemaName": "public",
-      "x": 696.4496400468184,
-      "y": 568.7850645870938
+      "x": 328.67671085556617,
+      "y": 337.6940048349925
     }
   ],
   "tableGroupCollapseStates": [],
@@ -66,7 +66,7 @@
       "secondFieldNames": [
         "user_id"
       ],
-      "secondTableName": "user_ips",
+      "secondTableName": "user_ip_addresses",
       "secondSchemaName": "public",
       "secondRelation": "*",
       "checkPoints": []
@@ -75,13 +75,13 @@
       "firstFieldNames": [
         "id"
       ],
-      "firstTableName": "ips",
+      "firstTableName": "ip_addresses",
       "firstSchemaName": "public",
       "firstRelation": "1",
       "secondFieldNames": [
-        "ip_id"
+        "ip_address_id"
       ],
-      "secondTableName": "user_ips",
+      "secondTableName": "user_ip_addresses",
       "secondSchemaName": "public",
       "secondRelation": "*",
       "checkPoints": []
@@ -135,11 +135,11 @@
       "firstFieldNames": [
         "id"
       ],
-      "firstTableName": "ips",
+      "firstTableName": "ip_addresses",
       "firstSchemaName": "public",
       "firstRelation": "1",
       "secondFieldNames": [
-        "ip_id"
+        "ip_address_id"
       ],
       "secondTableName": "cart_items",
       "secondSchemaName": "public",
@@ -165,26 +165,11 @@
       "firstFieldNames": [
         "id"
       ],
-      "firstTableName": "ips",
+      "firstTableName": "ip_addresses",
       "firstSchemaName": "public",
       "firstRelation": "1",
       "secondFieldNames": [
-        "ip_id"
-      ],
-      "secondTableName": "interactions",
-      "secondSchemaName": "public",
-      "secondRelation": "*",
-      "checkPoints": []
-    },
-    {
-      "firstFieldNames": [
-        "id"
-      ],
-      "firstTableName": "products",
-      "firstSchemaName": "public",
-      "firstRelation": "1",
-      "secondFieldNames": [
-        "product_id"
+        "ip_address_id"
       ],
       "secondTableName": "interactions",
       "secondSchemaName": "public",
