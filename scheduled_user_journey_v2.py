@@ -8,28 +8,7 @@ import schedule
 import json
 import logging
 from faker import Faker
-from uuid import uuid4
-# import logging
-# from scheduled_user_journey import PAYMENT_METHODS
 
-
-# Functions
-# register_device(ip_address: str, device_info: str) -> Dict[str, Any]
-# get_device(ip_address: str) -> Dict[str, Any]
-# interaccion(ip_address_id:int, interaction_type: str) -> Dict[str, Any]
-# get_products_by_search(words:str) -> List[Dict[str, Any]]
-# get_products_by_category(category:str) -> List[Dict[str, Any]]
-# select_product(List[Dict[str, Any]], product_id:int) -> Dict[str, Any]
-# add_to_wishlist(ip_address_id:int, product_id:int) -> Dict[str, Any]
-# add_to_cart(ip_address_id:int, product_id:int) -> Dict[str, Any]
-# remove_from_cart(ip_address_id:int, product_id:int) -> Dict[str, Any]
-# register_user(ip_address_id:int, email:str, password:str) -> Dict[str, Any]
-# add_shipping_info(ip_address_id:int, shipping_address:str) -> Dict[str, Any]
-# add_payment_info(ip_address_id:int, payment_method:str) -> Dict[str, Any]
-# add_payment_status(ip_address_id:int, payment_method:str) -> Dict[str, Any] 
-# (Completed/Failed)
-# add_suport(ip_address_id:int) -> Dict[str, Any]
-# exit_journey(ip_address_id:int) -> Dict[str, Any]
 
 # Fake data generator
 fake = Faker()
@@ -477,9 +456,13 @@ def simulate_user_journey():
                 cart = set(
                     np.random.choice(viewed, min(n_products, n_viewed), replace=False)
                     )
-                base_cart = set(data['cart'].keys())
-                additional_cart = cart.difference(base_cart)
-                
+                if data['cart']:
+                    base_cart = set(data['cart'].keys())
+                    additional_cart = cart.difference(base_cart)
+                else:
+                    additional_cart = cart
+                    
+                    
                 if additional_cart:
                     additional_data = {}
                     restock_data = {}
@@ -499,6 +482,7 @@ def simulate_user_journey():
                             else:
                                 logging.error(f"Could not restock {product_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
                     
+                    data['cart'].update(additional_data)
                     metadata = json.dumps(additional_data)
                     restock_metadata = json.dumps(restock_data)
                     interaction_restock = create_interaction(ip_address_id, 'restock', restock_metadata)
@@ -508,7 +492,7 @@ def simulate_user_journey():
                     else:
                         logging.error(f"Could not create interaction on restock at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-                    
+                        
                     interaction = create_interaction(ip_address_id, state, metadata)
                     if interaction:
                         logging.info(f"Interaction on add to cart created at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -516,7 +500,7 @@ def simulate_user_journey():
                     else:
                         logging.error(f"Could not create interaction on add to cart at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
                 else:
-                    logging.info(f"No new results found at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                        logging.info(f"No new results found at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             else:
                 logging.error(f"No products in viewed at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
@@ -551,15 +535,19 @@ def simulate_user_journey():
         
         elif state == 'checkout_started':
             logging.info(f"User is checking out at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-            data['order'] = {'status':{'payment':False, 'logging':False, 'shipping':None, 'token':None},
-                             'products':None}
-            # Create order
-            interaction = create_interaction(ip_address_id, state)    
-            if interaction:
-                logging.info(f"Interaction on checkout started created at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-                interactions.append(interaction)
+            if data['order']:
+                logging.info(f"Order already created at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                pass
             else:
-                logging.error(f"Could not create interaction on checkout started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                data['order'] = {'status':{'payment':False, 'logging':False, 'shipping':None, 'token':None},
+                                'items':None}
+                # Create order
+                interaction = create_interaction(ip_address_id, state)    
+                if interaction:
+                    logging.info(f"Interaction on checkout started created at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                    interactions.append(interaction)
+                else:
+                    logging.error(f"Could not create interaction on checkout started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         
         elif state == 'login_required':
             # Create user and login
@@ -682,7 +670,11 @@ def simulate_user_journey():
 
         elif state == 'purchase':
             logging.info(f"User is purchase at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-            if data['order']['status']['payment'] and data['order']['status']['shipping'] and data['order']['status']['logging']:
+            if (
+                (data['order']['status']['payment'] and data['order']['status']['shipping']) and 
+                (data['order']['status']['logging'] and data['order']['status']['token'])
+                ):
+
                 data['order']['items'] = data['cart'].copy()
                 
                 data['cart'].clear()
@@ -766,10 +758,11 @@ def simulate_user_journey():
         next_state = np.random.choice(STATES, p=prob, replace=False)
         return trajectory(ip_address_id, next_state, n, data, interactions)
         
-    data = {'Select': [], 'Save': [], 'Add Cart': [], 'Remove': []}
+    data = {'results': set(), 'viewed': set(), 'cart': {}, 'remove': set(), 'order': {}}
     interactions = []
     
-    data, interactions = trajectory(ip_address_id, random.choice(STATES), n_interactions, data, interactions)
+    data, interactions = trajectory(
+        ip_address_id, 'start', n_interactions, data, interactions)
     
     # Select
     # Save
