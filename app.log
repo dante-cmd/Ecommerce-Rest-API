@@ -1298,3 +1298,330 @@
 2026-04-23 02:46:05,000 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
 2026-04-23 02:46:05,010 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 91
 2026-04-23 02:46:05,011 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:05
+2026-04-23 02:46:10,013 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:46:10,016 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:10,030 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 40
+2026-04-23 02:46:10,032 - root - INFO - Starting user journey at 2026-04-23 02:46:10
+2026-04-23 02:46:10,033 - root - INFO - User is on the landing page at 2026-04-23 02:46:10
+2026-04-23 02:46:10,036 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:10,060 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:46:10,062 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:10
+2026-04-23 02:46:10,063 - root - INFO - User is exiting at 2026-04-23 02:46:10
+2026-04-23 02:46:10,066 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:10,092 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:46:10,093 - root - INFO - Interaction on exit created at 2026-04-23 02:46:10
+2026-04-23 02:46:15,094 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:46:15,096 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:15,118 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/ip_address/ HTTP/1.1" 201 40
+2026-04-23 02:46:15,119 - root - INFO - Starting user journey at 2026-04-23 02:46:15
+2026-04-23 02:46:15,120 - root - INFO - User is on the landing page at 2026-04-23 02:46:15
+2026-04-23 02:46:15,121 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:15,134 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:46:15,135 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:15
+2026-04-23 02:46:15,136 - root - INFO - User is searching at 2026-04-23 02:46:15
+2026-04-23 02:46:15,137 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:15,145 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=2 HTTP/1.1" 200 790
+2026-04-23 02:46:15,148 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:15,160 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 94
+2026-04-23 02:46:15,161 - root - INFO - User is exiting at 2026-04-23 02:46:15
+2026-04-23 02:46:15,162 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:15,172 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:46:15,172 - root - INFO - Interaction on exit created at 2026-04-23 02:46:15
+2026-04-23 02:46:20,174 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:46:20,177 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:20,212 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/ip_address/ HTTP/1.1" 201 39
+2026-04-23 02:46:20,214 - root - INFO - Starting user journey at 2026-04-23 02:46:20
+2026-04-23 02:46:20,215 - root - INFO - User is on the landing page at 2026-04-23 02:46:20
+2026-04-23 02:46:20,218 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:20,243 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:46:20,245 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:20
+2026-04-23 02:46:20,246 - root - INFO - User is viewing a product at 2026-04-23 02:46:20
+2026-04-23 02:46:20,246 - root - INFO - No new results found at 2026-04-23 02:46:20
+2026-04-23 02:46:20,247 - root - INFO - User is exiting at 2026-04-23 02:46:20
+2026-04-23 02:46:20,250 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:20,275 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:46:20,277 - root - INFO - Interaction on exit created at 2026-04-23 02:46:20
+2026-04-23 02:46:25,279 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:46:25,282 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:25,297 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 41
+2026-04-23 02:46:25,299 - root - INFO - Starting user journey at 2026-04-23 02:46:25
+2026-04-23 02:46:25,300 - root - INFO - User is on the landing page at 2026-04-23 02:46:25
+2026-04-23 02:46:25,303 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:25,327 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:46:25,329 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:25
+2026-04-23 02:46:25,330 - root - INFO - User is searching at 2026-04-23 02:46:25
+2026-04-23 02:46:25,332 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:25,348 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=7 HTTP/1.1" 200 2927
+2026-04-23 02:46:25,352 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:25,374 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 118
+2026-04-23 02:46:25,375 - root - INFO - User is viewing a product at 2026-04-23 02:46:25
+2026-04-23 02:46:25,377 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:25,388 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 105
+2026-04-23 02:46:25,389 - root - INFO - User is exiting at 2026-04-23 02:46:25
+2026-04-23 02:46:25,390 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:25,401 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:46:25,402 - root - INFO - Interaction on exit created at 2026-04-23 02:46:25
+2026-04-23 02:46:30,403 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:46:30,404 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:30,409 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 40
+2026-04-23 02:46:30,410 - root - INFO - Starting user journey at 2026-04-23 02:46:30
+2026-04-23 02:46:30,411 - root - INFO - User is on the landing page at 2026-04-23 02:46:30
+2026-04-23 02:46:30,412 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:30,429 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:46:30,431 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:30
+2026-04-23 02:46:30,431 - root - INFO - User is viewing a product at 2026-04-23 02:46:30
+2026-04-23 02:46:30,432 - root - INFO - No new results found at 2026-04-23 02:46:30
+2026-04-23 02:46:30,432 - root - INFO - User is adding to cart at 2026-04-23 02:46:30
+2026-04-23 02:46:30,433 - root - ERROR - No products in viewed at 2026-04-23 02:46:30
+2026-04-23 02:46:30,433 - root - INFO - User is exiting at 2026-04-23 02:46:30
+2026-04-23 02:46:30,435 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:30,454 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:46:30,456 - root - INFO - Interaction on exit created at 2026-04-23 02:46:30
+2026-04-23 02:46:35,457 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:46:35,460 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:35,472 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 42
+2026-04-23 02:46:35,474 - root - INFO - Starting user journey at 2026-04-23 02:46:35
+2026-04-23 02:46:35,475 - root - INFO - User is on the landing page at 2026-04-23 02:46:35
+2026-04-23 02:46:35,477 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:35,507 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:46:35,509 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:35
+2026-04-23 02:46:35,510 - root - INFO - User is viewing a category at 2026-04-23 02:46:35
+2026-04-23 02:46:35,513 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:35,529 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=7 HTTP/1.1" 200 3282
+2026-04-23 02:46:35,533 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:35,566 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 121
+2026-04-23 02:46:35,568 - root - INFO - User is viewing a product at 2026-04-23 02:46:35
+2026-04-23 02:46:35,570 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:35,584 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 112
+2026-04-23 02:46:35,585 - root - INFO - User is viewing a category at 2026-04-23 02:46:35
+2026-04-23 02:46:35,586 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:35,592 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=9 HTTP/1.1" 200 3720
+2026-04-23 02:46:35,594 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:35,605 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 130
+2026-04-23 02:46:35,606 - root - INFO - User is viewing a product at 2026-04-23 02:46:35
+2026-04-23 02:46:35,607 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:35,618 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 103
+2026-04-23 02:46:35,619 - root - INFO - User is exiting at 2026-04-23 02:46:35
+2026-04-23 02:46:35,620 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:35,631 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:46:35,632 - root - INFO - Interaction on exit created at 2026-04-23 02:46:35
+2026-04-23 02:46:40,633 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:46:40,636 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:40,668 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/ip_address/ HTTP/1.1" 201 41
+2026-04-23 02:46:40,670 - root - INFO - Starting user journey at 2026-04-23 02:46:40
+2026-04-23 02:46:40,671 - root - INFO - User is on the landing page at 2026-04-23 02:46:40
+2026-04-23 02:46:40,674 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:40,691 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:46:40,692 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:40
+2026-04-23 02:46:40,693 - root - INFO - User is searching at 2026-04-23 02:46:40
+2026-04-23 02:46:40,694 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:40,704 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=1 HTTP/1.1" 200 397
+2026-04-23 02:46:40,707 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:40,724 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 88
+2026-04-23 02:46:40,726 - root - INFO - User is viewing a category at 2026-04-23 02:46:40
+2026-04-23 02:46:40,728 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:40,738 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=9 HTTP/1.1" 200 3624
+2026-04-23 02:46:40,740 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:40,751 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 135
+2026-04-23 02:46:40,752 - root - INFO - User is viewing a product at 2026-04-23 02:46:40
+2026-04-23 02:46:40,753 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:40,763 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 113
+2026-04-23 02:46:40,763 - root - INFO - User is exiting at 2026-04-23 02:46:40
+2026-04-23 02:46:40,764 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:40,773 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:46:40,773 - root - INFO - Interaction on exit created at 2026-04-23 02:46:40
+2026-04-23 02:46:45,775 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:46:45,778 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:45,793 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 41
+2026-04-23 02:46:45,795 - root - INFO - Starting user journey at 2026-04-23 02:46:45
+2026-04-23 02:46:45,797 - root - INFO - User is on the landing page at 2026-04-23 02:46:45
+2026-04-23 02:46:45,800 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:45,822 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 91
+2026-04-23 02:46:45,824 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:45
+2026-04-23 02:46:45,825 - root - INFO - User is searching at 2026-04-23 02:46:45
+2026-04-23 02:46:45,827 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:45,842 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=5 HTTP/1.1" 200 2078
+2026-04-23 02:46:45,846 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:45,872 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 104
+2026-04-23 02:46:45,874 - root - INFO - User is viewing a product at 2026-04-23 02:46:45
+2026-04-23 02:46:45,877 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:45,902 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:46:45,905 - root - INFO - User is adding to cart at 2026-04-23 02:46:45
+2026-04-23 02:46:45,907 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:45,936 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?product_id=4&quantity=1 HTTP/1.1" 200 42017
+2026-04-23 02:46:45,938 - root - INFO - Added 4 to cart with 1 units
+2026-04-23 02:46:45,941 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:45,960 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 86
+2026-04-23 02:46:45,962 - root - INFO - Interaction on restock created at 2026-04-23 02:46:45
+2026-04-23 02:46:45,965 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:45,991 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 114
+2026-04-23 02:46:45,993 - root - INFO - Interaction on add to cart created at 2026-04-23 02:46:45
+2026-04-23 02:46:45,994 - root - INFO - User is viewing a product at 2026-04-23 02:46:45
+2026-04-23 02:46:45,996 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,009 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 103
+2026-04-23 02:46:46,010 - root - INFO - User is viewing a category at 2026-04-23 02:46:46
+2026-04-23 02:46:46,011 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,016 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=2 HTTP/1.1" 200 961
+2026-04-23 02:46:46,017 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,026 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 100
+2026-04-23 02:46:46,026 - root - INFO - User is viewing a product at 2026-04-23 02:46:46
+2026-04-23 02:46:46,027 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,037 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 93
+2026-04-23 02:46:46,038 - root - INFO - User is viewing a category at 2026-04-23 02:46:46
+2026-04-23 02:46:46,039 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,045 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=3 HTTP/1.1" 200 1162
+2026-04-23 02:46:46,047 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,057 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 104
+2026-04-23 02:46:46,058 - root - INFO - User is viewing a product at 2026-04-23 02:46:46
+2026-04-23 02:46:46,058 - root - INFO - No new results found at 2026-04-23 02:46:46
+2026-04-23 02:46:46,058 - root - INFO - User is adding to cart at 2026-04-23 02:46:46
+2026-04-23 02:46:46,059 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,068 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?product_id=256&quantity=2 HTTP/1.1" 200 42612
+2026-04-23 02:46:46,069 - root - INFO - Added 256 to cart with 2 units
+2026-04-23 02:46:46,070 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,079 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?product_id=451&quantity=1 HTTP/1.1" 200 42568
+2026-04-23 02:46:46,079 - root - INFO - Added 451 to cart with 1 units
+2026-04-23 02:46:46,081 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,087 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 86
+2026-04-23 02:46:46,088 - root - INFO - Interaction on restock created at 2026-04-23 02:46:46
+2026-04-23 02:46:46,089 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,099 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 144
+2026-04-23 02:46:46,100 - root - INFO - Interaction on add to cart created at 2026-04-23 02:46:46
+2026-04-23 02:46:46,100 - root - INFO - User is viewing cart at 2026-04-23 02:46:46
+2026-04-23 02:46:46,101 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,108 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 88
+2026-04-23 02:46:46,108 - root - INFO - Interaction on cart view created at 2026-04-23 02:46:46
+2026-04-23 02:46:46,109 - root - INFO - User is viewing a product at 2026-04-23 02:46:46
+2026-04-23 02:46:46,109 - root - INFO - No new results found at 2026-04-23 02:46:46
+2026-04-23 02:46:46,109 - root - INFO - User is searching at 2026-04-23 02:46:46
+2026-04-23 02:46:46,110 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,114 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=3 HTTP/1.1" 200 1286
+2026-04-23 02:46:46,116 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,127 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 98
+2026-04-23 02:46:46,127 - root - INFO - User is viewing a product at 2026-04-23 02:46:46
+2026-04-23 02:46:46,128 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,137 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 94
+2026-04-23 02:46:46,138 - root - INFO - User is exiting at 2026-04-23 02:46:46
+2026-04-23 02:46:46,139 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:46,145 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 83
+2026-04-23 02:46:46,146 - root - INFO - Interaction on exit created at 2026-04-23 02:46:46
+2026-04-23 02:46:51,148 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:46:51,148 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:51,156 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 42
+2026-04-23 02:46:51,156 - root - INFO - Starting user journey at 2026-04-23 02:46:51
+2026-04-23 02:46:51,157 - root - INFO - User is on the landing page at 2026-04-23 02:46:51
+2026-04-23 02:46:51,157 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:51,166 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:46:51,166 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:51
+2026-04-23 02:46:51,167 - root - INFO - User is exiting at 2026-04-23 02:46:51
+2026-04-23 02:46:51,167 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:51,175 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:46:51,176 - root - INFO - Interaction on exit created at 2026-04-23 02:46:51
+2026-04-23 02:46:56,177 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:46:56,180 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:56,195 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 40
+2026-04-23 02:46:56,197 - root - INFO - Starting user journey at 2026-04-23 02:46:56
+2026-04-23 02:46:56,198 - root - INFO - User is on the landing page at 2026-04-23 02:46:56
+2026-04-23 02:46:56,200 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:56,220 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:46:56,222 - root - INFO - Interaction on landing page created at 2026-04-23 02:46:56
+2026-04-23 02:46:56,223 - root - INFO - User is searching at 2026-04-23 02:46:56
+2026-04-23 02:46:56,225 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:56,241 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=7 HTTP/1.1" 200 3090
+2026-04-23 02:46:56,245 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:56,271 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 118
+2026-04-23 02:46:56,274 - root - INFO - User is viewing a product at 2026-04-23 02:46:56
+2026-04-23 02:46:56,276 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:56,301 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 95
+2026-04-23 02:46:56,304 - root - INFO - User is adding to cart at 2026-04-23 02:46:56
+2026-04-23 02:46:56,307 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:56,336 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?product_id=235&quantity=1 HTTP/1.1" 200 42602
+2026-04-23 02:46:56,338 - root - INFO - Added 235 to cart with 1 units
+2026-04-23 02:46:56,340 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:56,367 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 87
+2026-04-23 02:46:56,368 - root - INFO - Interaction on restock created at 2026-04-23 02:46:56
+2026-04-23 02:46:56,372 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:56,397 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 117
+2026-04-23 02:46:56,399 - root - INFO - Interaction on add to cart created at 2026-04-23 02:46:56
+2026-04-23 02:46:56,400 - root - INFO - User is viewing cart at 2026-04-23 02:46:56
+2026-04-23 02:46:56,402 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:56,427 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 89
+2026-04-23 02:46:56,429 - root - INFO - Interaction on cart view created at 2026-04-23 02:46:56
+2026-04-23 02:46:56,430 - root - INFO - User is exiting at 2026-04-23 02:46:56
+2026-04-23 02:46:56,432 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:46:56,452 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:46:56,454 - root - INFO - Interaction on exit created at 2026-04-23 02:46:56
+2026-04-23 02:47:01,456 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:47:01,459 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:01,473 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 42
+2026-04-23 02:47:01,475 - root - INFO - Starting user journey at 2026-04-23 02:47:01
+2026-04-23 02:47:01,476 - root - INFO - User is on the landing page at 2026-04-23 02:47:01
+2026-04-23 02:47:01,478 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:01,503 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:47:01,505 - root - INFO - Interaction on landing page created at 2026-04-23 02:47:01
+2026-04-23 02:47:01,506 - root - INFO - User is viewing a category at 2026-04-23 02:47:01
+2026-04-23 02:47:01,508 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:01,519 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=9 HTTP/1.1" 200 3511
+2026-04-23 02:47:01,522 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:01,539 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 135
+2026-04-23 02:47:01,540 - root - INFO - User is viewing a product at 2026-04-23 02:47:01
+2026-04-23 02:47:01,542 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:01,560 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 110
+2026-04-23 02:47:01,562 - root - INFO - User is exiting at 2026-04-23 02:47:01
+2026-04-23 02:47:01,564 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:01,581 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:47:01,582 - root - INFO - Interaction on exit created at 2026-04-23 02:47:01
+2026-04-23 02:47:06,584 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:47:06,587 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:06,593 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 40
+2026-04-23 02:47:06,593 - root - INFO - Starting user journey at 2026-04-23 02:47:06
+2026-04-23 02:47:06,594 - root - INFO - User is on the landing page at 2026-04-23 02:47:06
+2026-04-23 02:47:06,595 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:06,614 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:47:06,616 - root - INFO - Interaction on landing page created at 2026-04-23 02:47:06
+2026-04-23 02:47:06,617 - root - INFO - User is viewing a category at 2026-04-23 02:47:06
+2026-04-23 02:47:06,619 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:06,632 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=5 HTTP/1.1" 200 2052
+2026-04-23 02:47:06,636 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:06,659 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 113
+2026-04-23 02:47:06,661 - root - INFO - User is exiting at 2026-04-23 02:47:06
+2026-04-23 02:47:06,663 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:06,685 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:47:06,687 - root - INFO - Interaction on exit created at 2026-04-23 02:47:06
+2026-04-23 02:47:11,689 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:47:11,692 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:11,703 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 42
+2026-04-23 02:47:11,705 - root - INFO - Starting user journey at 2026-04-23 02:47:11
+2026-04-23 02:47:11,706 - root - INFO - User is on the landing page at 2026-04-23 02:47:11
+2026-04-23 02:47:11,709 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:11,735 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:47:11,736 - root - INFO - Interaction on landing page created at 2026-04-23 02:47:11
+2026-04-23 02:47:11,737 - root - INFO - User is exiting at 2026-04-23 02:47:11
+2026-04-23 02:47:11,739 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:11,759 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:47:11,760 - root - INFO - Interaction on exit created at 2026-04-23 02:47:11
+2026-04-23 02:47:16,762 - schedule - DEBUG - Running job Job(interval=5, unit=seconds, do=simulate_user_journey, args=(), kwargs={})
+2026-04-23 02:47:16,763 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:16,766 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/ip_address/?limit=1 HTTP/1.1" 200 41
+2026-04-23 02:47:16,767 - root - INFO - Starting user journey at 2026-04-23 02:47:16
+2026-04-23 02:47:16,767 - root - INFO - User is on the landing page at 2026-04-23 02:47:16
+2026-04-23 02:47:16,768 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:16,782 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 92
+2026-04-23 02:47:16,783 - root - INFO - Interaction on landing page created at 2026-04-23 02:47:16
+2026-04-23 02:47:16,783 - root - INFO - User is viewing a category at 2026-04-23 02:47:16
+2026-04-23 02:47:16,785 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:16,791 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=2 HTTP/1.1" 200 689
+2026-04-23 02:47:16,793 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:16,806 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 101
+2026-04-23 02:47:16,807 - root - INFO - User is viewing a product at 2026-04-23 02:47:16
+2026-04-23 02:47:16,808 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:16,820 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 100
+2026-04-23 02:47:16,821 - root - INFO - User is searching at 2026-04-23 02:47:16
+2026-04-23 02:47:16,822 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:16,828 - urllib3.connectionpool - DEBUG - http://localhost:8000 "GET /api/products/?limit=5 HTTP/1.1" 200 2139
+2026-04-23 02:47:16,830 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:16,843 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 107
+2026-04-23 02:47:16,844 - root - INFO - User is exiting at 2026-04-23 02:47:16
+2026-04-23 02:47:16,845 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:8000
+2026-04-23 02:47:16,856 - urllib3.connectionpool - DEBUG - http://localhost:8000 "POST /api/interactions/ HTTP/1.1" 201 84
+2026-04-23 02:47:16,857 - root - INFO - Interaction on exit created at 2026-04-23 02:47:16
