@@ -48,10 +48,6 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = db.query(UserModel).order_by(UserModel.id).offset(skip).limit(limit).all()
     return users
 
-@router.get("/total")
-def total_users(db: Session = Depends(get_db)):
-    total = db.query(UserModel).count()
-    return {"Total":total}
 
 @router.get("/{user_id}", response_model=User)
 def read_user(user_id: int, db: Session = Depends(get_db)):

@@ -30,7 +30,7 @@ def read_ip(ip_address: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="IP not found")
     return db_ip
 
-@router.get("/", response_model=List[IPModel])
+@router.get("/", response_model=List[IPAddress])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     #  func.newid() is a random number generator. 
     # This is SQL Server-specific and won't work on PostgreSQL/MySQL.

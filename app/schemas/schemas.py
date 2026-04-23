@@ -156,7 +156,7 @@ class CartItem(CartItemBase):
 # User Interaction schemas
 
 class InteractionBase(BaseModel):
-    ip_address_id: str
+    ip_address_id: int
     # product_id: int
     interaction_type: str
     interaction_metadata: Optional[str]=None

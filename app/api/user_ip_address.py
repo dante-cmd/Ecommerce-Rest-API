@@ -28,16 +28,16 @@ def register_ip_for_user(user_ip_address: UserIPAddressCreate, db: Session = Dep
     db.refresh(db_ip)
     return db_ip
 
-@router.get("/{ip_id}", response_model=UserIPAddress)
-def read_ip(ip_id: int, db: Session = Depends(get_db)):
-    db_ip = db.query(UserIPModel).filter(UserIPModel.ip_id == ip_id).first()
+@router.get("/{ip_address_id}", response_model=UserIPAddress)
+def read_ip(ip_address_id: int, db: Session = Depends(get_db)):
+    db_ip = db.query(UserIPModel).filter(UserIPModel.ip_address_id == ip_address_id).first()
     if db_ip is None:
         raise HTTPException(status_code=404, detail="IP not found")
     return db_ip
 
-@router.get("/random", response_model=UserIPAddress)
-def get_random_ip(db: Session = Depends(get_db)):
-    db_ip = db.query(UserIPModel).order_by(func.newid()).first()
+@router.get("/", response_model=List[UserIPAddress])
+def get_random_ip(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    db_ip = db.query(UserIPModel).order_by(func.newid()).offset(skip).limit(limit).all()
     if db_ip is None:
         raise HTTPException(status_code=404, detail="IP not found")
     return db_ip

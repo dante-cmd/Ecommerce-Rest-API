@@ -31,7 +31,7 @@ class User(Base):
     # Relationships
     user_ip = relationship("UserIPAddress", back_populates="user")
     order = relationship("Order", back_populates="user")
-    cart_items = relationship("CartItem", back_populates="user")
+    # cart_items = relationship("CartItem", back_populates="user")
 
 
 class UserIPAddress(Base):
@@ -39,7 +39,7 @@ class UserIPAddress(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    ip_address_id = Column(Integer, ForeignKey("ip_address.id"), unique=True)  # Each IPAddress can only be associated with one user
+    ip_address_id = Column(Integer, ForeignKey("ip_addresses.id"), unique=True)  # Each IPAddress can only be associated with one user
     created_at = Column(DateTime, server_default=func.now())
 
     # Relationships
@@ -63,7 +63,7 @@ class Product(Base):
     # Relationships
     order_items = relationship("OrderItem", back_populates="product")
     cart_items = relationship("CartItem", back_populates="product")
-    interactions = relationship("Interaction", back_populates="product")
+    # interactions = relationship("Interaction", back_populates="product")
 
 class Order(Base):
     __tablename__ = "orders"

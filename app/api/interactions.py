@@ -14,6 +14,7 @@ router = APIRouter()
 async def create_interaction(
     interaction: InteractionCreate,
     db: Session = Depends(get_db)):
+    # print("interaction",interaction)
     
     # Create interaction with user info if authenticated, otherwise just IP
     db_interaction = InteractionModel(
@@ -24,6 +25,7 @@ async def create_interaction(
         # ip_address=client_ip if not current_user else None  
         # Only store IP for anonymous users
     )
+    # print("db_interaction",db_interaction)
     
     db.add(db_interaction)
     db.commit()

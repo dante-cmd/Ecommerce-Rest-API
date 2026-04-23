@@ -11,10 +11,6 @@ import numpy as np
 
 fake = Faker()
 # Quantity of IP addresses to create
-N_IP_ADDRESSES = 500
-DEFAULT_PASSWORD = "Password123!"
-ADMIN_PASSWORD = "adminpassword"
-
 
 def init_db():
     # Crear todas las tablas
@@ -29,7 +25,11 @@ def init_db():
     :raises: Exception: If there is an error initializing the database
     """
     Base.metadata.create_all(bind=engine)
-    
+    N_IP_ADDRESSES = 500
+    DEFAULT_PASSWORD = "Password123!"
+    ADMIN_PASSWORD = "adminpassword"
+
+
     # Create a session
     db = SessionLocal()
     

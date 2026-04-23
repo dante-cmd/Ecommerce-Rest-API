@@ -34,9 +34,11 @@ PAYMENT_METHODS = {
 
 
 STATES = ['start', 'landing_page', 'search', 'category_view', 'product_view', 
-         'variant_selected', 'add_to_cart', 'cart_view', 'remove_from_cart', 'checkout_started', 
+         # 'variant_selected', 
+         'add_to_cart', 'cart_view', 'remove_from_cart', 'checkout_started', 
          'login_required', 'shipping_info', 'payment_info', 'purchase',
-         'wishlist', 'exit']
+         # 'wishlist', 
+         'exit']
 
 # N_PRODUCTS = 10
 DEFAULT_PASSWORD = "Password123!"
@@ -72,7 +74,8 @@ def fetch_random_ip_address() -> Dict[str, Any]:
     try:
         response = requests.get(f"{BASE_URL}/api/ip_address/", params={"limit": 1})
         if response.status_code == 200:
-            return response.json()
+            response_01 =response.json()
+            return response_01[0]
         return dict()
     except requests.exceptions.ConnectionError:
         print("Failed to connect to the API. Make sure the service is running.")
@@ -135,17 +138,6 @@ def get_user_by_email(email: str) -> Dict[str, Any]:
         print("Failed to connect to the API. Make sure the service is running.")
         return dict()
 
-def register_ip_address_by_user(ip_address_id: int, user_id: int) -> Dict[str, Any]:
-    """Register an IP address for a user"""
-    ip_data = {
-        "ip_address_id": ip_address_id,
-        "user_id": user_id
-    }
-    response = requests.post(f"{BASE_URL}/api/user_ip_address/", json=ip_data)
-    if response.status_code == 201:
-        return response.json()
-    return {}
-
 def register_user(full_name:str, username: str, email: str, password: str) -> Dict[str, Any]:
     """Create a new user account or return existing user if email is already registered"""
     user_data = {
@@ -193,6 +185,24 @@ def auth(email: str, password: str) -> Dict[str, Any]:
             token_type="bearer"
         )
 
+def register_ip_address_by_user(ip_address_id: int, user_id: int) -> Dict[str, Any]:
+    """Register an IP address for a user"""
+    ip_data = {
+        "ip_address_id": ip_address_id,
+        "user_id": user_id
+    }
+    response = requests.post(f"{BASE_URL}/api/user_ip_address/", json=ip_data)
+    if response.status_code == 201:
+        return response.json()
+    return {}
+
+def get_ip_address_user_by_ip_address_id(ip_address_id: int):
+    """Check if the IP is used by an existing user"""
+    response = requests.get(f"{BASE_URL}/api/user_ip_address/{ip_address_id}")
+    if response.status_code == 200:
+        return response.json()
+    return {}
+
 # -------------------- END USER -------------------------
 
 # ------------------ START PRODUCT ----------------------
@@ -215,12 +225,7 @@ def check_availability(product_id: int, quantity: int) -> bool:
     else:
         return False
 
-def get_ip_address_user_by_ip_address_id(ip_address_id: int):
-    """Check if the IP is used by an existing user"""
-    response = requests.get(f"{BASE_URL}/api/ips_users/{ip_address_id}")
-    if response.status_code == 200:
-        return response.json()
-    return {}
+
 
 def restock_product(product_id: int) -> Dict[str, Any]:
     """
@@ -366,7 +371,6 @@ def simulate_user_journey():
         
     # Set number of interactions for this user journey (between 1 and 50)
     n_interactions = random.randint(1, 50)
-    
 
     def trajectory(ip_address_id:int, state:str, n:int, 
                    data:dict, interactions:list):
@@ -375,10 +379,10 @@ def simulate_user_journey():
         if  state == 'start':
             logging.info(f"Starting user journey at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             
-
         elif state == 'landing_page':
             logging.info(f"User is on the landing page at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             interaction = create_interaction(ip_address_id, state)
+            # print("interaction", interaction, ip_address_id, state)
             if interaction:
                 logging.info(f"Interaction on landing page created at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
                 interactions.append(interaction)
@@ -389,9 +393,10 @@ def simulate_user_journey():
             logging.info(f"User is searching at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             n_products = random.randint(1, 8)
             results = get_n_random_products(n_products)
+            # print("results", results)
             if results:
                 additional_results = results.difference(data['results'])
-                metadata = json.dumps(additional_results)
+                metadata = json.dumps(list(additional_results))
                 if additional_results:
                     data['results'] = data['results'].union(additional_results)
                     interaction = create_interaction(ip_address_id, state, metadata)
@@ -408,9 +413,10 @@ def simulate_user_journey():
             logging.info(f"User is viewing a category at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             n_products = random.randint(1, 9)
             results = get_n_random_products(n_products)
+            # print("results", results)
             if results:
                 additional_results = results.difference(data['results'])
-                metadata = json.dumps(additional_results)
+                metadata = json.dumps(list(additional_results))
                 if additional_results:
                     data['results'] = data['results'].union(additional_results)
                     interaction = create_interaction(ip_address_id, state, metadata)
@@ -427,14 +433,19 @@ def simulate_user_journey():
             logging.info(f"User is viewing a product at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             n_products = random.randint(1, 5)
             n_results = len(data['results'])
-            results = np.asarray(data['results'])
+            results = np.asarray(list(data['results']))
+            
             if n_results > 0:
+                # print("product_view results",results)
+                # print(n_products)
+                # print(n_results)
+                # print(results)
                 viewed = set(
-                    np.random.choice(results, min(n_products, n_results), replace=False)
+                    np.random.choice(results, min(n_products, n_results), replace=False).tolist()
                     )
                 additional_viewed = viewed.difference(data['viewed'])
                 if additional_viewed:
-                    metadata = json.dumps(additional_viewed)
+                    metadata = json.dumps(list(additional_viewed))
                     data['viewed'] = data['viewed'].union(additional_viewed)
                     interaction = create_interaction(ip_address_id, state, metadata)
                     if interaction:
@@ -451,10 +462,10 @@ def simulate_user_journey():
             logging.info(f"User is adding to cart at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             n_products = random.randint(1, 3)
             n_viewed = len(data['viewed'])
-            viewed = np.asarray(data['viewed'])
+            viewed = np.asarray(list(data['viewed']))
             if n_viewed > 0:
                 cart = set(
-                    np.random.choice(viewed, min(n_products, n_viewed), replace=False)
+                    np.random.choice(viewed, min(n_products, n_viewed), replace=False).tolist()
                     )
                 if data['cart']:
                     base_cart = set(data['cart'].keys())
@@ -482,6 +493,7 @@ def simulate_user_journey():
                             else:
                                 logging.error(f"Could not restock {product_id} at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
                     
+                    # print(additional_data)
                     data['cart'].update(additional_data)
                     metadata = json.dumps(additional_data)
                     restock_metadata = json.dumps(restock_data)
@@ -523,7 +535,7 @@ def simulate_user_journey():
                 
                 data['remove'] = data['remove'].join({remove})
                 data['cart'].pop(remove)
-                metadata = json.dumps({remove})
+                metadata = json.dumps([remove])
                 interaction = create_interaction(ip_address_id, state, metadata)    
                 if interaction:
                     logging.info(f"Interaction on remove from cart created at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -639,7 +651,7 @@ def simulate_user_journey():
             if not data['order']['status']['shipping']:
                 address = fake.unique.address()
                 data['order']['status']['shipping'] = address
-                metadata = json.dumps(address)
+                metadata = json.dumps([address])
                 interaction = create_interaction(ip_address_id, state, metadata)
                     
                 if interaction:
@@ -659,7 +671,7 @@ def simulate_user_journey():
                     logging.info(f"User had changed payment info to True at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
                     data['order']['status']['payment'] = True
                 
-                metadata = json.dumps({'payment':status_payment})
+                metadata = json.dumps({'payment':1 if status_payment else 0})
                 interaction = create_interaction(ip_address_id, state, metadata)
                     
                 if interaction:
@@ -686,7 +698,7 @@ def simulate_user_journey():
                 # Prepare order items
                 order_items = [
                     {"product_id": item["product_id"], "quantity": item["quantity"]} 
-                    for item in data['order']['items']
+                    for item in data['order']['items'].values()
                 ]
                 
                 # 4. Create order with all products in the cart
@@ -725,14 +737,6 @@ def simulate_user_journey():
             else:
                 logging.error(f"User have not purchased in at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
                 
-        elif state == 'wishlist':
-            metadata = '{"shipping_address": "123 Main St, Anytown, USA"}'
-            interaction = create_interaction(ip_address_id, state, metadata)
-                    
-            if interaction:
-                interactions.append(interaction)
-            pass
-        
         elif state == 'exit':
             logging.info(f"User is exiting at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
             interaction = create_interaction(ip_address_id, state)
@@ -756,6 +760,7 @@ def simulate_user_journey():
             # idx = STATES.index(state)
         prob = matrix_transition[state].copy()
         next_state = np.random.choice(STATES, p=prob, replace=False)
+        print("Next state:", next_state)
         return trajectory(ip_address_id, next_state, n, data, interactions)
         
     data = {'results': set(), 'viewed': set(), 'cart': {}, 'remove': set(), 'order': {}}
@@ -774,7 +779,7 @@ def simulate_user_journey():
 def run_scheduler():
     """Run the scheduler to execute the simulation every 3 minutes"""
     # Schedule the job every 3 minutes
-    schedule.every(1).minutes.do(simulate_user_journey)
+    schedule.every(5).seconds.do(simulate_user_journey)
     
     # Run the scheduler
     print("Scheduler started. Running user journey simulation every 3 minutes...")
