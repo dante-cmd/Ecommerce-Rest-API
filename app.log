@@ -9424,3 +9424,64 @@
 2026-05-02 01:25:28 - root - INFO - Found 10 results
 2026-05-02 01:25:28 - root - INFO - Found 1 new results
 2026-05-02 01:25:28 - root - INFO - Interaction on product view
+2026-05-02 01:25:33 - root - INFO - =========Starting User Journey Simulation=========
+2026-05-02 01:25:33 - root - INFO - Existing device. Fetching random ip address
+2026-05-02 01:25:33 - root - INFO - Existing ip address: 10.144.189.137
+2026-05-02 01:25:33 - root - INFO - Number of interactions: 13
+2026-05-02 01:25:33 - root - INFO - ------------IP address:10.144.189.137-------------
+2026-05-02 01:25:33 - root - INFO - Starting user journey
+2026-05-02 01:25:33 - root - INFO - Interaction on start have been created
+2026-05-02 01:25:33 - root - INFO - User is on the landing page
+2026-05-02 01:25:34 - root - INFO - Interaction on landing page have been created
+2026-05-02 01:25:34 - root - INFO - User is searching
+2026-05-02 01:25:34 - root - INFO - Found 5 results
+2026-05-02 01:25:34 - root - INFO - Found 5 new results
+2026-05-02 01:25:34 - root - INFO - Interaction on search have been created
+2026-05-02 01:25:34 - root - INFO - User is viewing a category
+2026-05-02 01:25:34 - root - INFO - Found 5 results
+2026-05-02 01:25:34 - root - INFO - Found 5 new results
+2026-05-02 01:25:34 - root - INFO - Interaction on category view have been created
+2026-05-02 01:25:34 - root - INFO - User is viewing a product
+2026-05-02 01:25:34 - root - INFO - Found 10 results
+2026-05-02 01:25:34 - root - INFO - Found 3 new results
+2026-05-02 01:25:34 - root - INFO - Interaction on product view
+2026-05-02 01:25:34 - root - INFO - User is exiting
+2026-05-02 01:25:34 - root - INFO - Interaction on exit
+2026-05-02 01:25:39 - root - INFO - =========Starting User Journey Simulation=========
+2026-05-02 01:25:39 - root - INFO - New device. Generating new ip address
+2026-05-02 01:25:39 - root - INFO - New ip address: 210.169.72.235
+2026-05-02 01:25:39 - root - INFO - Number of interactions: 9
+2026-05-02 01:25:39 - root - INFO - ------------IP address:210.169.72.235-------------
+2026-05-02 01:25:39 - root - INFO - Starting user journey
+2026-05-02 01:25:39 - root - INFO - Interaction on start have been created
+2026-05-02 01:25:39 - root - INFO - User is on the landing page
+2026-05-02 01:25:39 - root - INFO - Interaction on landing page have been created
+2026-05-02 01:25:39 - root - INFO - User is viewing a category
+2026-05-02 01:25:39 - root - INFO - Found 6 results
+2026-05-02 01:25:39 - root - INFO - Found 6 new results
+2026-05-02 01:25:39 - root - INFO - Interaction on category view have been created
+2026-05-02 01:25:39 - root - INFO - User is viewing a product
+2026-05-02 01:25:39 - root - INFO - Found 6 results
+2026-05-02 01:25:39 - root - INFO - Found 3 new results
+2026-05-02 01:25:39 - root - INFO - Interaction on product view
+2026-05-02 01:25:39 - root - INFO - User is viewing a category
+2026-05-02 01:25:39 - root - INFO - Found 1 results
+2026-05-02 01:25:39 - root - INFO - Found 1 new results
+2026-05-02 01:25:39 - root - INFO - Interaction on category view have been created
+2026-05-02 01:25:39 - root - INFO - User is viewing a product
+2026-05-02 01:25:39 - root - INFO - Found 7 results
+2026-05-02 01:25:39 - root - INFO - Found 1 new results
+2026-05-02 01:25:39 - root - INFO - Interaction on product view
+2026-05-02 01:25:39 - root - INFO - User is exiting
+2026-05-02 01:25:39 - root - INFO - Interaction on exit
+2026-05-02 01:25:44 - root - INFO - =========Starting User Journey Simulation=========
+2026-05-02 01:25:44 - root - INFO - Existing device. Fetching random ip address
+2026-05-02 01:25:44 - root - INFO - Existing ip address: 54.83.111.20
+2026-05-02 01:25:44 - root - INFO - Number of interactions: 29
+2026-05-02 01:25:44 - root - INFO - -------------IP address:54.83.111.20--------------
+2026-05-02 01:25:44 - root - INFO - Starting user journey
+2026-05-02 01:25:44 - root - INFO - Interaction on start have been created
+2026-05-02 01:25:44 - root - INFO - User is on the landing page
+2026-05-02 01:25:44 - root - INFO - Interaction on landing page have been created
+2026-05-02 01:25:44 - root - INFO - User is exiting
+2026-05-02 01:25:44 - root - INFO - Interaction on exit
