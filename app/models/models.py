@@ -122,20 +122,3 @@ class Interaction(Base):
     # user = relationship("User", back_populates="interactions")
     ip_address = relationship("IPAddress", back_populates="interactions")
     # product = relationship("Product", back_populates="interactions")
-    
-
-# class UserInteraction(Base):
-#     __tablename__ = "user_interactions"
-#     
-#     id = Column(Integer, primary_key=True, index=True)
-#     user_id = Column(Integer,  nullable=True)  # Make user_id optional
-#     # ForeignKey("users.id"),
-#     product_id = Column(Integer, ForeignKey("products.id"))
-#     interaction_type = Column(String(50))  # view, click, add_to_cart, purchase, out_of_stock
-#     timestamp = Column(DateTime, server_default=func.now())
-#     interaction_metadata = Column(Text)  # Additional information about the interaction
-#     ip_address = Column(String(45), nullable=True)  # For tracking anonymous users by IPAddress (IPv6 max length)
-#     
-#     # Relationships
-#     # user = relationship("User", back_populates="interactions")
-#     product = relationship("Product", back_populates="interactions")

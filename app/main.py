@@ -5,10 +5,12 @@ from app.api import ip_address, products, user_ip_address, users, orders, cart, 
 from app.create_db import drop_if_exists_and_create_db
 from app.init_db import init_db
 # from app.models import models
-import time
+import os
 
-# Wait for database to be ready
-time.sleep(10)
+# Wait for database to be ready (only in production/docker, not during tests)
+if os.getenv("SKIP_DB_INIT") != "true":
+    import time
+    time.sleep(10)
 
 # Create database
 try:

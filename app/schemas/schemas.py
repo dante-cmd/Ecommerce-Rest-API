@@ -134,24 +134,33 @@ class Order(OrderBase):
         from_attributes = True
 # --------- End Order schemas ------------
 
-# Cart schemas
+# ============== Cart schemas ===============
+
 class CartItemBase(BaseModel):
     product_id: int
     quantity: int
 
 class CartItemCreate(CartItemBase):
-    pass
+    ip_address_id: int
 
 class CartItemUpdate(BaseModel):
+    id:int
+    ip_address_id: int
+    product_id:int
     quantity: int
+
+class CartItemDelete(BaseModel):
+    id: int
+    ip_address_id: int
 
 class CartItem(CartItemBase):
     id: int
-    user_id: int
+    ip_address_id: int
     
     class Config:
         from_attributes = True
 
+# ===========================================
 
 # User Interaction schemas
 
