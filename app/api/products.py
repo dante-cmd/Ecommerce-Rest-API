@@ -23,9 +23,17 @@ def create_product(product: ProductCreate, db: Session = Depends(get_db)):
 
 @router.get("/", response_model=List[Product])
 def read_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    # Use dialect-appropriate random ordering
+    dialect_name = db.get_bind().dialect.name
+    if dialect_name == "mssql":
+        order_by = func.newid()
+    elif dialect_name == "postgresql":
+        order_by = func.random()
+    else:
+        order_by = func.random()
     products = db.query(
         ProductModel).order_by(
-            func.newid()).offset(skip).limit(limit).all()
+            order_by).offset(skip).limit(limit).all()
     return products
 
 # @router.get("/{n_products}", response_model=List[Product])

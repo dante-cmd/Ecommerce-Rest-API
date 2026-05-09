@@ -13,23 +13,40 @@ services:
     # This is volumen.
       - sqlserver_data:/var/opt/mssql
 
+  mongodb:
+    image: mongo:7.0
+    platform: linux/amd64
+    container_name: ecommerce-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=adminpass
+      - MONGO_INITDB_DATABASE=ecommerce_reviews
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
   app:
     build: .
     container_name: ecommerce-app
     ports:
       - "8000:8000"
-    # environment:
-    #   - DB_HOST=sqlserver
-    #   - DB_SERVER=sqlserver
-    #   - DB_DRIVER=pymssql
+    environment:
+      # - DB_HOST=sqlserver
+      # - DB_SERVER=sqlserver
+      # - DB_DRIVER=pymssql
+      - MONGODB_URL=${MONGODB_URL:-mongodb://admin:adminpass@mongodb:27017/ecommerce_reviews?authSource=admin}
+      - MONGODB_DB_NAME=${MONGODB_DB_NAME:-ecommerce_reviews}
     depends_on:
       - sqlserver
+      - mongodb
     # This is bind mount.
     volumes:
       - ./app:/app/app
 
 volumes:
   sqlserver_data:
+  mongodb_data:
 
 networks:
   default:

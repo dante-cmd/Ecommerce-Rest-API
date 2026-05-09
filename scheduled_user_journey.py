@@ -8,13 +8,13 @@ import schedule
 import json
 import logging
 from faker import Faker
-
+import os
 
 # Fake data generator
 fake = Faker()
 
 # Base URL for the API (connecting to the app service from inside the container)
-BASE_URL = "http://localhost:8000"
+BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 
 logging.basicConfig(
     filename='app.log', 
@@ -313,6 +313,29 @@ def create_order(
             f"{BASE_URL}/api/orders/", 
             json=order_data,
             headers={"Authorization": f"Bearer {token}"})
+    if response.status_code == 201:
+        return response.json()
+    return {}
+
+def create_review(
+    product_id: int,
+    rating: int,
+    title: str,
+    content: str,
+    token: str
+) -> Dict[str, Any]:
+    """Create a product review"""
+    review_data = {
+        "product_id": product_id,
+        "rating": rating,
+        "title": title,
+        "content": content
+    }
+    response = requests.post(
+        f"{BASE_URL}/api/reviews/",
+        json=review_data,
+        headers={"Authorization": f"Bearer {token}"}
+    )
     if response.status_code == 201:
         return response.json()
     return {}
@@ -807,6 +830,22 @@ def simulate_user_journey():
                         interactions.append(interaction)
                     else:
                         logging.error(f"Could not create interaction on purchase")
+                    
+                    # 7. Optionally create a review for a random purchased product
+                    if random.random() < 0.6 and data['order']['items']:
+                        reviewed_item = random.choice(data['order']['items'])
+                        product_id = reviewed_item['product_id']
+                        rating = random.randint(1, 5)
+                        title = fake.sentence(nb_words=4)
+                        content = fake.paragraph(nb_sentences=2)
+                        review = create_review(
+                            product_id, rating, title, content,
+                            data['order']['status']['token']
+                        )
+                        if review:
+                            logging.info(f"Review created for product {product_id} (ID: {review['id']})")
+                        else:
+                            logging.error(f"Could not create review for product {product_id}")
                 else:
                     logging.error(f"Could not create order")
             else:

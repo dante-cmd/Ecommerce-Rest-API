@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import ip_address, products, user_ip_address, users, orders, cart, interactions
+from app.api import ip_address, products, user_ip_address, users, orders, cart, interactions, reviews
 # from app.database import database
 from app.create_db import drop_if_exists_and_create_db
 from app.init_db import init_db
+from app.database.mongodb import close_mongodb_client
 # from app.models import models
 import os
 
@@ -57,7 +58,13 @@ app.include_router(products.router, prefix="/api/products", tags=["products"])
 app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
 app.include_router(cart.router, prefix="/api/cart", tags=["cart"])
 app.include_router(interactions.router, prefix="/api/interactions", tags=["interactions"])
+app.include_router(reviews.router, prefix="/api/reviews", tags=["reviews"])
 
 @app.get("/")
 async def root():
     return {"message": "Welcome to the E-commerce API"}
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    close_mongodb_client()

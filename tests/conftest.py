@@ -56,12 +56,19 @@ def client():
     
     app.dependency_overrides[get_db] = override_get_db
     
+    # Override MongoDB with mongomock for tests
+    import mongomock
+    from app.database.mongodb import set_mongodb_client
+    mock_client = mongomock.MongoClient()
+    set_mongodb_client(mock_client)
+
     client = TestClient(app)
     
     yield client
     
     # Cleanup after session
     Base.metadata.drop_all(bind=engine)
+    mock_client.close()
 
 
 

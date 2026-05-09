@@ -431,18 +431,20 @@ class TestCart:
 
         # TestClient.delete does not support json=, so use data and headers
         delete_payload = json.dumps({"id": item_id, "ip_address_id": _state["ip_id_2"]})
-        r = client.delete(
+        r = client.request(
+            "DELETE",
             self.BASE + "/",
-            data=delete_payload,
+            content=delete_payload,
             headers={"Content-Type": "application/json"},
         )
         assert r.status_code == 204
 
     def test_delete_cart_item_not_found(self, client):
         delete_payload = json.dumps({"id": 999999, "ip_address_id": _state["ip_id"]})
-        r = client.delete(
+        r = client.request(
+            "DELETE",
             self.BASE + "/",
-            data=delete_payload,
+            content=delete_payload,
             headers={"Content-Type": "application/json"},
         )
         assert r.status_code == 404
@@ -597,6 +599,182 @@ class TestInteractions:
     def test_read_interactions_unauthenticated(self, client):
         r = client.get(self.BASE + "/")
         assert r.status_code in (401, 403)
+
+
+# ===========================================================================
+# 9. Reviews (MongoDB)
+# ===========================================================================
+
+class TestReviews:
+    BASE = "/api/reviews"
+
+    def test_create_review_unauthenticated(self, client):
+        payload = {
+            "product_id": _state["product_id"],
+            "rating": 5,
+            "title": "Great product",
+            "content": "I love this product!",
+        }
+        r = client.post(self.BASE + "/", json=payload)
+        assert r.status_code == 401
+
+    def test_create_review_authenticated(self, client):
+        headers = _auth_headers(client, _state["user_email"], _state["user_password"])
+        payload = {
+            "product_id": _state["product_id"],
+            "rating": 5,
+            "title": "Great product",
+            "content": "I love this product!",
+            "images": ["http://example.com/img1.jpg"],
+        }
+        r = client.post(self.BASE + "/", json=payload, headers=headers)
+        assert r.status_code == 201, r.text
+        data = r.json()
+        assert data["product_id"] == _state["product_id"]
+        assert data["user_id"] == _state["user_id"]
+        assert data["rating"] == 5
+        assert data["title"] == "Great product"
+        assert data["content"] == "I love this product!"
+        assert data["images"] == ["http://example.com/img1.jpg"]
+        assert data["helpful_votes"] == 0
+        assert "id" in data
+        _state["review_id"] = data["id"]
+
+    def test_create_review_duplicate_fails(self, client):
+        headers = _auth_headers(client, _state["user_email"], _state["user_password"])
+        payload = {
+            "product_id": _state["product_id"],
+            "rating": 4,
+            "title": "Another review",
+            "content": "Should fail",
+        }
+        r = client.post(self.BASE + "/", json=payload, headers=headers)
+        assert r.status_code == 400
+        assert "already reviewed" in r.json()["detail"].lower()
+
+    def test_create_review_product_not_found(self, client):
+        headers = _auth_headers(client, _state["user_email"], _state["user_password"])
+        payload = {
+            "product_id": 999999,
+            "rating": 5,
+            "title": "Ghost product",
+            "content": "Should fail",
+        }
+        r = client.post(self.BASE + "/", json=payload, headers=headers)
+        assert r.status_code == 404
+
+    def test_read_reviews_by_product(self, client):
+        r = client.get(f"{self.BASE}/product/{_state['product_id']}")
+        assert r.status_code == 200
+        data = r.json()
+        assert isinstance(data, list)
+        assert len(data) >= 1
+        assert data[0]["product_id"] == _state["product_id"]
+
+    def test_read_reviews_by_product_not_found(self, client):
+        r = client.get(f"{self.BASE}/product/999999")
+        assert r.status_code == 404
+
+    def test_read_reviews_by_user(self, client):
+        r = client.get(f"{self.BASE}/user/{_state['user_id']}")
+        assert r.status_code == 200
+        data = r.json()
+        assert isinstance(data, list)
+        assert len(data) >= 1
+        assert data[0]["user_id"] == _state["user_id"]
+
+    def test_read_reviews_by_user_not_found(self, client):
+        r = client.get(f"{self.BASE}/user/999999")
+        assert r.status_code == 404
+
+    def test_read_review_by_id(self, client):
+        r = client.get(f"{self.BASE}/{_state['review_id']}")
+        assert r.status_code == 200
+        assert r.json()["id"] == _state["review_id"]
+
+    def test_read_review_not_found(self, client):
+        r = client.get(f"{self.BASE}/000000000000000000000000")
+        assert r.status_code == 404
+
+    def test_read_review_invalid_id(self, client):
+        r = client.get(f"{self.BASE}/not-an-object-id")
+        assert r.status_code == 400
+
+    def test_update_review(self, client):
+        headers = _auth_headers(client, _state["user_email"], _state["user_password"])
+        payload = {"rating": 4, "title": "Updated title", "content": "Updated content"}
+        r = client.put(f"{self.BASE}/{_state['review_id']}", json=payload, headers=headers)
+        assert r.status_code == 200, r.text
+        data = r.json()
+        assert data["rating"] == 4
+        assert data["title"] == "Updated title"
+        assert data["content"] == "Updated content"
+
+    def test_update_review_not_found(self, client):
+        headers = _auth_headers(client, _state["user_email"], _state["user_password"])
+        payload = {"rating": 3}
+        r = client.put(f"{self.BASE}/000000000000000000000000", json=payload, headers=headers)
+        assert r.status_code == 404
+
+    def test_update_review_unauthorized(self, client):
+        # Admin creates a review for product_2
+        admin_headers = _auth_headers(client, _state["admin_email"], _state["admin_password"])
+        payload = {
+            "product_id": _state["product_id_2"],
+            "rating": 5,
+            "title": "Admin review",
+            "content": "Admin content",
+        }
+        r = client.post(self.BASE + "/", json=payload, headers=admin_headers)
+        assert r.status_code == 201
+        admin_review_id = r.json()["id"]
+
+        # Regular user tries to update admin's review
+        user_headers = _auth_headers(client, _state["user_email"], _state["user_password"])
+        payload = {"rating": 1}
+        r = client.put(f"{self.BASE}/{admin_review_id}", json=payload, headers=user_headers)
+        assert r.status_code == 403
+
+    def test_mark_review_helpful(self, client):
+        r = client.post(f"{self.BASE}/{_state['review_id']}/helpful")
+        assert r.status_code == 200, r.text
+        assert r.json()["helpful_votes"] == 1
+
+        r = client.post(f"{self.BASE}/{_state['review_id']}/helpful")
+        assert r.status_code == 200
+        assert r.json()["helpful_votes"] == 2
+
+    def test_delete_review_unauthorized(self, client):
+        # Try to delete admin's review as regular user
+        # First get admin review id from previous test
+        # Actually we need to create one fresh
+        admin_headers = _auth_headers(client, _state["admin_email"], _state["admin_password"])
+        payload = {
+            "product_id": _state["product_id_2"],
+            "rating": 5,
+            "title": "To delete",
+            "content": "Content",
+        }
+        r = client.post(self.BASE + "/", json=payload, headers=admin_headers)
+        # Duplicate may fail since admin already reviewed product_2 above
+        if r.status_code == 201:
+            admin_review_id = r.json()["id"]
+        else:
+            # Find existing admin review
+            r = client.get(f"{self.BASE}/user/{_state['admin_id']}")
+            admin_review_id = r.json()[0]["id"]
+
+        user_headers = _auth_headers(client, _state["user_email"], _state["user_password"])
+        r = client.delete(f"{self.BASE}/{admin_review_id}", headers=user_headers)
+        assert r.status_code == 403
+
+    def test_delete_review(self, client):
+        headers = _auth_headers(client, _state["user_email"], _state["user_password"])
+        r = client.delete(f"{self.BASE}/{_state['review_id']}", headers=headers)
+        assert r.status_code == 204
+
+        r = client.get(f"{self.BASE}/{_state['review_id']}")
+        assert r.status_code == 404
 
 
 # ===========================================================================
